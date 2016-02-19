@@ -1,0 +1,302 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html" />
+
+<!--<link rel="import" href="../filters/filter.html" />-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<polymer-element name="Verzoeken-table">
+    <template>
+        <style>
+            :host {
+                position: relative;
+            }
+            #table_header {
+                background: #49c0f0; /* Old browsers */
+                background: -moz-linear-gradient(top, #49c0f0 0%, #2cafe3 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#49c0f0), color-stop(100%,#2cafe3)); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* IE10+ */
+                background: linear-gradient(to bottom, #49c0f0 0%,#2cafe3 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', endColorstr='#2cafe3',GradientType=0 ); /* IE6-9 */
+                color: white;
+                height: 100%;
+                width: 100%;
+                font-size: 12px;
+            }
+            #table {
+                background-color: #BBDEFB;
+                margin-left: 5%;
+                height: 100%;
+                width: 90%;
+                min-width: 675px;
+                border: none;
+            }
+            #filtertable {
+                background-color: #BBDEFB;
+                margin-left: 5%;
+                height: 100%;
+                width: 90%;
+                min-width: 675px;
+                border-bottom: 5px;
+                border-bottom-color: black;
+            }
+            .table_column {
+                margin-top: 0.5%;
+                font-size: 12px;
+            }
+            .scrollWrapper {
+                height: 100%;
+                width: 90%;
+                overflow: hidden;
+            }
+            #paperdecoration {
+                background-color: white;
+                color: black;
+                height: 80%;
+                margin-top: 0.35%;
+            }
+            #radio-menu-decoration {
+                background-color: white;
+                color: black;
+                margin-top: 10%;
+            }
+            #filter-button-position {
+                margin-right: 87%;
+                width: 11%;
+            }
+            #filter {
+                display: none;
+            }
+            p {
+                text-align: center;
+            }
+            @media all and (max-width: 2160px) and (min-width: 800px) {
+                :host {
+                    position: relative;
+                }
+                #table_header {
+                    background: #49c0f0; /* Old browsers */
+                    background: -moz-linear-gradient(top, #49c0f0 0%, #2cafe3 100%); /* FF3.6+ */
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#49c0f0), color-stop(100%,#2cafe3)); /* Chrome,Safari4+ */
+                    background: -webkit-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* Chrome10+,Safari5.1+ */
+                    background: -o-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* Opera 11.10+ */
+                    background: -ms-linear-gradient(top, #49c0f0 0%,#2cafe3 100%); /* IE10+ */
+                    background: linear-gradient(to bottom, #49c0f0 0%,#2cafe3 100%); /* W3C */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', endColorstr='#2cafe3',GradientType=0 ); /* IE6-9 */
+                    color: white;
+                    height: 100%;
+                    width: 100%;
+                    font-size: 12px;
+                }
+                #table {
+                    background-color: #BBDEFB;
+                    margin-left: 5%;
+                    height: 100%;
+                    width: 90%;
+                    min-width: 675px;
+                    border: none;
+                }
+                #filtertable {
+                    background-color: #BBDEFB;
+                    margin-left: 5%;
+                    height: 100%;
+                    width: 90%;
+                    min-width: 675px;
+                    border-bottom: 5px;
+                    border-bottom-color: black;
+                }
+                .table_column {
+                    margin-top: 0.5%;
+                    font-size: 12px;
+                }
+                .scrollWrapper {
+                    height: 100%;
+                    width: 90%;
+                    overflow: hidden;
+                }
+                #paperdecoration {
+                    background-color: white;
+                    color: black;
+                    height: 80%;
+                    margin-top: 0.35%;
+                }
+                #radio-menu-decoration {
+                    background-color: white;
+                    color: black;
+                    margin-top: 10%;
+                }
+                #filter-button-position {
+                    margin-right: 87%;
+                    width: 11%;
+                }
+                #filter {
+                    display: none;
+                }
+                p {
+                    text-align: center;
+                }
+            }
+            @media all and (max-width: 800px) and (min-width: 120px) {
+                .scrollWrapper {
+                    height: 100%;
+                    width: 90%;
+                    overflow: scroll;
+                }
+            }
+        </style>
+
+        <div class="scrollWrapper">
+
+            <table id="table" cellspacing="0" cellpadding="0">
+                <thead id="table_header">
+                    <tr>
+                        <th id="first_header_tag"><p>Request Nr.</p></th>
+                        <th class="table_header_tag"><p>Datum Aangemaakt</p></th>
+                        <th class="table_header_tag"><p>Type Request</p></th>
+                        <th class="table_header_tag"><p>Van Socialworker</p></th>
+                        <th class="table_header_tag"><p>Naar Socialworker</p></th>
+                        <th class="table_header_tag"><p>Is Goedgekeurd</p></th>
+                        <th class="table_header_options"><p> <paper-input id="paperdecoration" type="text" name="search" value="{{searchObject}}"></paper-input> </p></th>
+                        <th class="table_header_options">
+                            <p>
+                            </p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{searchObject | filterArray}}
+                    <template repeat="{{object in objectData}}">
+                        <tr class="table_column">
+                            <td id="first_table_content"><p>{{object.requestNumber}}</p></td>
+                            <td class="table_contents"><p>{{object.createdCreated}}</p></td>
+                            <td class="table_contents"><p>{{object.typeRequest}}</p></td>
+                            <td class="table_contents"><p>{{object.fromSocialworker}}</p></td>
+                            <td class="table_contents"><p>{{object.toSocialworker}}</p></td>
+                            <td class="table_contents"><p>{{object.approved}}</p></td>
+                            <td class="icon_content"><p><core-icon icon="search" onclick="submit({{object.RequestNumber}})" value="" /></p></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </template>
+    <script>
+        // id van de familie wordt in notificationID neergezet en het formulier wordt verstuurd
+        function submit(ID) {
+            document.getElementById("notificationID").value = ID;
+            document.getElementById("notificationform").submit();
+        };
+
+        function setCheckboxValue(checkboxValue) {
+
+            console.log("function test before: " + checkboxValue);
+            if (checkboxValue) {
+                checkboxValue = false;
+            } else {
+                checkboxValue = true;
+            }
+            console.log("function test after: " + checkboxValue);
+            return checkboxValue;
+        } ;
+        
+        Polymer({
+            ready: function () {
+                console.log("Tabel is bereikt!");
+                if (this.attributes.hasOwnProperty("initialData")) {
+                    console.log("initialData is ontvangen");
+                    this.objectData = JSON.parse(this.attributes['initialData'].value);
+                }
+
+                this.requestNr        = true;
+                this.createdCreated        = true ;
+                this.typeRequest      = true ;
+                this.toSocialworker   = true ;
+                this.fromSocialworker = true ;
+                this.approved      = true ;
+            },
+
+            loadData: function (dt) {
+                console.log("JSON via Javascript ontvangen")
+                // Initiating JSON files
+                this.objectData = dt;
+                this.objectDataBackGround = dt;
+            },
+
+            requestNrFunc: function(){
+                this.requestNr = setCheckboxValue(this.requestNr) ;
+            },
+
+            typeRequestFunc: function () {
+                console.log("type request: " + this.typeRequest);
+                this.typeRequest = setCheckboxValue(this.typeRequest);
+            },
+
+            createdCreatedFunc: function(){
+                this.createdCreated = setCheckboxValue(this.createdCreated) ;
+            },
+
+            toSocialworkerFunc: function(){
+                this.toSocialworker = setCheckboxValue(this.toSocialworker) ;
+            },
+
+            fromSocialworkerFunc: function(){
+                this.fromSocialworker = setCheckboxValue(this.fromSocialworker) ;
+            },
+
+            approvedFunc: function(){
+                this.approved = setCheckboxValue(this.approved) ;
+            },
+
+            toggle: function () {
+                console.log("toggle");
+                this.$.collapse.toggle();
+            },
+
+
+            filterArray: function () {
+           
+                var search = "";
+                if (this.searchObject !== undefined) {
+                    search = this.searchObject;
+                }
+                console.log("search input :" + this.searchObject);
+                console.log("search value :" + search);
+                console.log("input array :" + this.objectDataBackGround);
+
+                var requestNr = this.requestNr;
+                console.log("this nr : " + this.requestNr);
+                var typeRequest = this.typeRequest;
+                var createdCreated = this.createdCreated;
+                console.log("this date : " + this.createdCreated);
+                var fromSocialworker = this.fromSocialworker;
+                var toSocialworker = this.toSocialworker;
+                var approved = this.approved;
+
+                if (typeof this.objectDataBackGround !== "undefined") {
+                    this.objectData = jQuery.grep(this.objectDataBackGround, function (element, index) {
+                        var nrBool = (element.requestNumber.toLowerCase()).includes(search.toLowerCase()) ;
+                        var typeRequestBool = (element.typeRequest.toLowerCase()).includes(search.toLowerCase()) ;
+                        var createdCreatedBool = (element.createdCreated.toLowerCase()).includes(search.toLowerCase());
+                        var fromSocialworkerBool = (element.fromSocialworker.toLowerCase()).includes(search.toLowerCase());
+                        var toSocialworkerBool = (element.toSocialworker.toLowerCase()).includes(search.toLowerCase()) ;
+                        var approvedBool = (element.approved.toLowerCase()).includes(search.toLowerCase()) ;
+
+                        if (nrBool || typeRequestBool || createdCreatedBool || fromSocialworkerBool || toSocialworkerBool || approvedBool) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    })
+                    console.log("filter array :" + this.objectData);
+                }
+            },
+            checkedCheckboxes: function (value) {
+                console.log("checking checkbox " + value);
+            }
+        });
+    </script>
+</polymer-element>

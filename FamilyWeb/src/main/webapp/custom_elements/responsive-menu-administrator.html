@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../bower_components/core-menu/core-submenu.html">
+<link rel="import" href="../bower_components/core-icons/social-icons.html">
+<link rel="import" href="../bower_components/core-item/core-item.html">
+
+<polymer-element name="responsive-menu-administrator" attributes="current" noscript>
+    <template>
+        <style>
+        	core-menu {
+        		-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+        	}
+        	
+            core-menu .core-selected {
+                background-color: #93C910;
+                -webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+            }
+
+            core-submenu .core-selected {
+                background-color: #D6F688;
+                -webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+            }
+        </style>
+        <core-menu selected="{{current}}">
+            <core-item id="home" icon="home" label="Home"><a href="../administrator/startscreen_administrator.jsp"></a></core-item>
+
+            <core-item id="admin_requests" icon="description" label="Verzoeken"><a href="../administrator/admin_requests.jsp"></a></core-item>
+
+            <core-submenu icon="face" label="Zorgprofessionals">
+                <core-item id="socialworker_overview" label="Overzicht"><a href="../administrator/employee_overview.jsp"></a></core-item>
+                <core-item id="add_socialworker" label="Toevoegen"><a href="../administrator/add_edit_employee.jsp"></a></core-item>
+            </core-submenu>
+
+            <core-submenu icon="social:people" label="Cli&euml;nten">
+                <core-item id="client_overview" label="Overzicht"><a href="../administrator/client_overview.jsp"></a></core-item>
+                <core-item id="add_client" label="Toevoegen"><a href="../administrator/add_edit_client.jsp"></a></core-item>
+            </core-submenu>
+        </core-menu>
+    </template>
+</polymer-element>

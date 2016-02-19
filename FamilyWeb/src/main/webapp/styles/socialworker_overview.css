@@ -1,0 +1,168 @@
+body {
+	font-family: sans-serif;
+}
+
+core-toolbar {
+	background-color: #009EE3;
+	width: 100%;
+	text-align:center;
+}
+
+[drawer] {
+	background-color: #FFFFFF;
+}
+
+#content{
+}
+
+#title {
+	width:500px;
+	margin:auto;
+	color: #FFFFFF;
+	font-size: 30px;
+	font-weight: bold;
+	text-shadow: rgb(3, 3, 3) 4px 4px 4px;
+}
+
+#zorgproffesionalID{
+	display: none;
+}
+
+#form_container {
+    width: 90%;
+    margin: 10px auto;
+    background-color: #babbbe;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#search_container {
+    width: 90%;
+    margin: 5px auto;
+    padding: 5px;
+    background-color: #E9EAEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#search_form {
+}
+
+#overview_container {
+    width: 90%;
+    min-width: 200px;
+    margin: 2px auto;
+    overflow-x: auto;
+    background-color: #E9EAEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+table {
+    width: 100%;
+}
+
+.overview {
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 10px 10px 5px #888888;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+	
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+	
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+	
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}.overview table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.overview tr:last-child td:last-child {
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+.overview table tr:first-child td:first-child {
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}
+.overview table tr:first-child td:last-child {
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+}.overview tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+}.overview tr:hover td{
+	
+}
+.overview tr:nth-child(odd){ background-color:#ffc9c9; }
+.overview tr:nth-child(even)    { background-color:#ffffff; }.overview td{
+	vertical-align:middle;
+	
+	
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:7px;
+	font-size:10px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#000000;
+}.overview tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.overview tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.overview tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.overview tr:first-child td{
+		background:-o-linear-gradient(bottom, #c00000 5%, #c00000 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c00000), color-stop(1, #c00000) );
+	background:-moz-linear-gradient( center top, #c00000 5%, #c00000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#c00000", endColorstr="#c00000");	background: -o-linear-gradient(top,#c00000,c00000);
+
+	background-color:#c00000;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#ffffff;
+}
+.overview tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #c00000 5%, #c00000 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c00000), color-stop(1, #c00000) );
+	background:-moz-linear-gradient( center top, #c00000 5%, #c00000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#c00000", endColorstr="#c00000");	background: -o-linear-gradient(top,#c00000,c00000);
+
+	background-color:#c00000;
+}
+.overview tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.overview tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+
+@media screen and (max-width: 550px){
+  #title{
+  	font-size: 20px;
+  }
+}

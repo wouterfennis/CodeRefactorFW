@@ -1,0 +1,233 @@
+body {
+	font-family: sans-serif;
+}
+
+core-toolbar {
+	background-color: #009EE3;
+	width: 100%;
+	text-align:center;
+}
+
+[drawer] {
+	background-color: #FFFFFF;
+}
+
+#scrollableTabs{
+	background-color: #DA0000;
+}
+paper-tab a {
+	text-decoration: none;
+	color: inherit;
+}
+
+#title {
+	width:500px;
+	margin:auto;
+	color: #FFFFFF;
+	font-size: 30px;
+	font-weight: bold;
+	text-shadow: rgb(3, 3, 3) 4px 4px 4px;
+}
+
+.content{
+}
+
+.network_container{
+	display: none;
+	width: 1000px;
+	margin: 20px auto;
+	padding: 10px;
+	background-color: #FFFFFF;
+	border: 1px solid #B2B2B2;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.title{
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.network{
+	width: 800px;
+	height: 600px;
+	margin-bottom: 5px;
+	background-color: #7E7D7D;
+	float: left;
+	overflow: hidden;
+}
+
+.sidebar{
+	min-width: 150px;
+	height: 600px;
+	float: right;
+	overflow: hidden;
+	background-color: #009EE3;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.interviewee{
+	margin: 5px;
+	padding: 3px;
+	background-color: #FFFFFF;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.contact_groups{
+	width: 140px;
+	height: 270px;
+	padding: 2px;
+	background-color: #FFFFFF;
+	overflow: auto;
+	margin: 5px auto;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.contact_groups ul{
+	list-style-type: none;
+}
+
+.contact_groups li{
+	margin-left: -20px;
+}
+
+.comments_selected_person{
+	width: 140px;
+	height: 235px;
+	padding: 2px;
+	background-color: #FFFFFF;
+	overflow: auto;
+	margin: 0px auto;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.timeline{
+	min-width: 300px;
+	min-height: 40px;
+	padding: 5px;
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#49c0f0+0,2cafe3+100;Blue+3D+%2311 */
+	background: #49c0f0; /* Old browsers */
+	background: -moz-linear-gradient(top,  #49c0f0 0%, #2cafe3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#49c0f0), color-stop(100%,#2cafe3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #49c0f0 0%,#2cafe3 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', endColorstr='#2cafe3',GradientType=0 ); /* IE6-9 */
+	clear: both;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.slider{
+	width: 450px;
+}
+
+.general_comment{
+	margin-top: 5px;
+	padding: 5px;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#49c0f0+0,2cafe3+100;Blue+3D+%2311 */
+	background: #49c0f0; /* Old browsers */
+	background: -moz-linear-gradient(top,  #49c0f0 0%, #2cafe3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#49c0f0), color-stop(100%,#2cafe3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #49c0f0 0%,#2cafe3 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', endColorstr='#2cafe3',GradientType=0 ); /* IE6-9 */
+	clear: both;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#container1{
+	float: left;
+	overflow: auto;
+}
+
+#container2{
+	float: right;
+	margin-left: auto;
+	overflow: auto;
+}
+
+.resolution_warning_picture{
+	display: block;
+	width: 457px;
+	height: 469px;
+	margin: 30px auto;
+	background-image: url("../images/rotate.png");
+    background-color: #cccccc;
+   	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+svg {
+    background: #B8B8B8;
+}
+
+.node {
+    fill: gray;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: #777;
+    stroke-width: 2px;
+}
+
+@media screen and (min-width:1000px){
+    .network_container {
+        display:block;
+    }
+    
+    .resolution_warning_picture{
+    	display: none;
+    }
+    
+}
+
+@media screen and (max-width: 550px){
+  #title{
+  	font-size: 20px;
+  }
+}
+
+paper-tabs{
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+}
+
+.date{
+	width: 250px;
+    margin: 5px;
+    float:left;
+	overflow: hidden;
+}
+
+.fullscreen{
+	margin-top: -5px;
+}
+
+.selectInput{
+	width: 120px;
+}

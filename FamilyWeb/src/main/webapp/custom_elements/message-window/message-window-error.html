@@ -1,0 +1,28 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="message-window-error" attributes="message" noscript>
+    <template>
+        <style>
+		.alert-box {
+			width: 30%;
+			min-width: 200px;
+			margin: 10px auto;
+			color:#555;
+			border-radius:10px;
+			font-family:Tahoma,Geneva,Arial,sans-serif;font-size:11px;
+			padding:10px 10px 10px 36px;
+		}
+		
+		.alert-box span {
+			font-weight:bold;
+			text-transform:uppercase;
+		}
+		
+		.error {
+			background:#ffecec url('images/error.png') no-repeat 10px 50%;
+			border:1px solid #f5aca6;
+		}
+        </style>
+			<div class="alert-box error"><span>Fout: </span> {{message}}</div>
+    </template>
+</polymer-element>

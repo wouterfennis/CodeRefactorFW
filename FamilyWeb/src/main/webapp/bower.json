@@ -1,0 +1,19 @@
+{
+  "name": "polymer project",
+  "version": "0.0.0",
+  "description": "Test project om te kijken hoe polymer werkt",
+  "authors": [
+    "Wouter Fennis"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.4"
+  }
+}

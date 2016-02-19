@@ -1,0 +1,37 @@
+﻿<!--hieronder staat de oude originele DIE IS NIET MEER NODIG-->
+<div id="'+countBox'" class="person">
+    <div class="contact">
+        <div class="information">
+            <label>Naam:</label>
+            <input type="text" id="' + groupName + name + '" name="' + groupName + name + '" value="' + groupName + name + '" " />
+        </div>
+        <div class="information">
+            <label>Rol:</label>
+            <input type="text" id="' + groupName + role + '" name="' + groupName + role + '" value="' + groupName + role + '" " />
+        </div>
+        <div class="information">
+            <label>Leeftijd:</label>
+            <input type="text" id="' + groupName + age + '" name="' + groupName + age + '" value="' + groupName + age + '" " />
+        </div>
+    </div>
+    <core-icon-button onclick="removeInput(" '+countBox' ")" icon="highlight-remove"></core-icon-button>
+</div>
+
+<!--Hieronder staat die goede en op dit moment in gebruik-->
+<div id="' + countBox + '" class="person">
+    <div class="contact">
+        <div class="information">
+            <label>Naam:</label>
+            <input type="text" id="' + groupName + name + '" name="' + groupName + name + '" value="' + groupName + name + '" />
+        </div> <div class="information">
+            <label>Rol:</label>
+            <input type="text" id="' + groupName + role + '" name="' + groupName + role + '" value="' + groupName + role + '" />
+        </div>
+        <div class="information">
+            <label>Leeftijd:</label>
+            <input type="text" id="' + groupName + age + '" name="' + groupName + age + '" value="' + groupName + age + '" />
+        </div>
+        <input class="hidden" type="text" id="' + groupName + validate + '" name="' + groupName + validate + '" value="true" />
+    </div>
+    <core-icon-button icon="highlight-remove" onclick="' + " removeinput(" + countbox + "," + "'" + groupname + "'" + ")" + '"></core-icon-button>
+</div>

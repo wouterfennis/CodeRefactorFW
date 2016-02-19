@@ -1,0 +1,37 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../bower_components/core-menu/core-submenu.html">
+<link rel="import" href="../bower_components/core-icons/social-icons.html">
+<link rel="import" href="../bower_components/core-item/core-item.html">
+
+<polymer-element name="responsive-menu-socialworker" attributes="current" noscript>
+    <template>
+        <style>
+            core-menu .core-selected {
+                background-color: #93C910;
+            }
+
+            core-submenu .core-selected {
+                background-color: #D6F688;
+                -webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+            }
+        </style>
+        <core-menu selected="{{current}}">
+            <core-item id="home" icon="home" label="Home"><a href="../socialworker/startscreen_socialworker.jsp"></a></core-item>
+
+            <core-submenu icon="social:people" label="Cli&euml;nten">
+                <core-item id="client_overview" label="Overzicht"><a href="../socialworker/client_overview.jsp"></a></core-item>
+                <core-item id="add_client" label="Toevoegen"><a href="../socialworker/add_edit_client.jsp"></a></core-item>
+            </core-submenu>
+
+            <core-item id="socialworker_requests" icon="description" label="Verzoeken"><a href="../socialworker/socialworker_requests.jsp"></a></core-item>
+
+            <core-submenu icon="face" label="Gedeeld">
+                <core-item id="shared_with_me" label="Gedeeld met mij"><a href="../socialworker/shared_with_me.jsp"></a></core-item>
+                <core-item id="shared_from_me" label="Gedeeld van mij"><a href="../socialworker/shared_from_me.jsp"></a></core-item>
+            </core-submenu>
+        </core-menu>
+    </template>
+</polymer-element>

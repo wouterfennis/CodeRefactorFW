@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.LoginServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/LoginServlet.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>LoginSupportServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.LoginSupportServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LoginSupportServlet</servlet-name>
+		<url-pattern>/LoginSupportServlet.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EmployeeServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.EmployeeServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>EmployeeServlet</servlet-name>
+		<url-pattern>/EmployeeServlet.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ClientServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.ClientServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ClientServlet</servlet-name>
+		<url-pattern>/ClientServlet.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PasswordresetServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.PasswordresetServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PasswordresetServlet</servlet-name>
+		<url-pattern>/PasswordresetServlet.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description>
+		</description>
+		<display-name>ContactServlet</display-name>
+		<servlet-name>ContactServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.ContactServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>FamilyInformation</display-name>
+		<servlet-name>FamilyInformation</servlet-name>
+		<servlet-class>servlets.FamilyWeb.FamilyInformation</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>LogoutServlet</display-name>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>SurveyServlet</display-name>
+		<servlet-name>SurveyServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.SurveyServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>FamilyMemberServlet</display-name>
+		<servlet-name>FamilyMemberServlet</servlet-name>
+		<servlet-class>servlets.FamilyWeb.FamilyMemberServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ContactServlet</servlet-name>
+		<url-pattern>/ContactServlet.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FamilyInformation</servlet-name>
+		<url-pattern>/FamilyInformation.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/LogoutServlet.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SurveyServlet</servlet-name>
+		<url-pattern>/SurveyServlet.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FamilyMemberServlet</servlet-name>
+		<url-pattern>/FamilyMemberServlet.do</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+	<filter>
+		<description>
+		</description>
+		<display-name>AdminFilter</display-name>
+		<filter-name>AdminFilter</filter-name>
+		<filter-class>util.FamilyWeb.AdminFilter</filter-class>
+	</filter>
+	<filter>
+		<description>
+		</description>
+		<display-name>SocialworkerFilter</display-name>
+		<filter-name>SocialworkerFilter</filter-name>
+		<filter-class>util.FamilyWeb.SocialworkerFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AdminFilter</filter-name>
+		<url-pattern>/administrator/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SocialworkerFilter</filter-name>
+		<url-pattern>/socialworker/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>util.FamilyWeb.MyServletContextListener
+		</listener-class>
+	</listener>
+</web-app>

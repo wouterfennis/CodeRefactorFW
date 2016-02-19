@@ -1,0 +1,357 @@
+﻿SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS `familyweb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `familyweb`;
+
+CREATE TABLE IF NOT EXISTS `answers` (
+  `answer_id` int(10) NOT NULL,
+  `answer` varchar(255) NOT NULL,
+  `question_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `categories` (
+  `category_id` int(10) NOT NULL,
+  `name` varchar(35) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `clients` (
+  `client_id` int(10) NOT NULL,
+  `forename` varchar(35) NOT NULL,
+  `surname` varchar(35) NOT NULL,
+  `dateofbirth` date NOT NULL,
+  `postcode` varchar(35) NOT NULL,
+  `street` varchar(35) NOT NULL,
+  `housenumber` varchar(10) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `nationality` varchar(50) NOT NULL,
+  `telephonenumber` varchar(50) NOT NULL,
+  `mobilephonenumber` varchar(50) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `filenumber` varchar(50) DEFAULT NULL,
+  `dateCreated` date NOT NULL,
+  `user_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `contact_id` int(10) NOT NULL,
+  `fullname` varchar(50) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  `age` int(11) NOT NULL,
+  `commentary` varchar(4000) DEFAULT NULL,
+  `category_id` int(10) NOT NULL,
+  `network_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `familymembers` (
+  `member_id` int(10) NOT NULL,
+  `forename` varchar(35) NOT NULL,
+  `surname` varchar(35) NOT NULL,
+  `dateofbirth` date DEFAULT NULL,
+  `postcode` varchar(10) DEFAULT NULL,
+  `street` varchar(50) DEFAULT NULL,
+  `housenumber` varchar(30) DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `telephonenumber` varchar(50) DEFAULT NULL,
+  `mobilephonenumber` varchar(50) DEFAULT NULL,
+  `nationality` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `client_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `networks` (
+  `network_id` int(10) NOT NULL,
+  `datecreated` date NOT NULL,
+  `commentary` varchar(65000) DEFAULT NULL,
+  `client_id` int(10) DEFAULT NULL,
+  `member_id` int(10) DEFAULT NULL,
+  `survey_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `notification_id` int(10) NOT NULL,
+  `notification` varchar(50) NOT NULL,
+  `created` date NOT NULL,
+  `user_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `questions` (
+  `question_id` int(10) NOT NULL,
+  `question` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `requests` (
+  `request_id` int(10) NOT NULL,
+  `requestdate` date NOT NULL,
+  `commentary` varchar(255) NOT NULL,
+  `commentaryadmin` varchar(255) NOT NULL,
+  `approved` varchar(1) NOT NULL,
+  `client_id` int(10) NOT NULL,
+  `user_from_id` int(10) NOT NULL,
+  `user_to_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `requests_notifications` (
+  `request_notification` int(10) NOT NULL,
+  `notification_id` int(10) NOT NULL,
+  `request_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `results` (
+  `result_id` int(10) NOT NULL,
+  `question_id` int(10) NOT NULL,
+  `answer_id` int(10) NOT NULL,
+  `contact_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `shares` (
+  `share_id` int(10) NOT NULL,
+  `request_id` int(10) NOT NULL,
+  `network_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `surveys` (
+  `survey_id` int(10) NOT NULL,
+  `name` varchar(35) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `surveys_questions` (
+  `survey_question_id` int(10) NOT NULL,
+  `survey_id` int(10) NOT NULL,
+  `question_id` int(10) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(10) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `forename` varchar(35) NOT NULL,
+  `surname` varchar(35) NOT NULL,
+  `dateofbirth` date NOT NULL,
+  `postcode` varchar(35) NOT NULL,
+  `street` varchar(35) NOT NULL,
+  `housenumber` varchar(10) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `nationality` varchar(50) NOT NULL,
+  `telephonenumber` varchar(50) NOT NULL,
+  `mobilephonenumber` varchar(50) DEFAULT NULL,
+  `usertype` varchar(35) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `isactive` varchar(1) NOT NULL,
+  `employeenumber` varchar(50) NOT NULL,
+  `wwreset` varchar(1) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `answers`
+  ADD PRIMARY KEY (`answer_id`), ADD KEY `FKAnswers401861` (`question_id`);
+
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`), ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`client_id`), ADD UNIQUE KEY `client_id` (`client_id`), ADD KEY `FKClients968335` (`user_id`);
+
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`contact_id`), ADD UNIQUE KEY `contact_id` (`contact_id`), ADD KEY `FKContacts769798` (`category_id`), ADD KEY `FKContacts114790` (`network_id`);
+
+ALTER TABLE `familymembers`
+  ADD PRIMARY KEY (`member_id`), ADD UNIQUE KEY `member_id` (`member_id`), ADD KEY `FKFamilymemb507734` (`client_id`);
+
+ALTER TABLE `networks`
+  ADD PRIMARY KEY (`network_id`), ADD UNIQUE KEY `network_id` (`network_id`), ADD KEY `FKNetworks173258` (`client_id`), ADD KEY `FKNetworks939190` (`member_id`), ADD KEY `FKNetworks912632` (`survey_id`);
+
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`notification_id`), ADD KEY `FKNotificati77649` (`user_id`);
+
+ALTER TABLE `questions`
+  ADD PRIMARY KEY (`question_id`);
+
+ALTER TABLE `requests`
+  ADD PRIMARY KEY (`request_id`), ADD KEY `FKRequests552865` (`client_id`), ADD KEY `FKRequests602896` (`user_from_id`), ADD KEY `FKRequests860811` (`user_to_id`);
+
+ALTER TABLE `requests_notifications`
+  ADD PRIMARY KEY (`request_notification`), ADD KEY `FKRequests_n351834` (`notification_id`), ADD KEY `FKRequests_n103793` (`request_id`);
+
+ALTER TABLE `results`
+  ADD PRIMARY KEY (`result_id`), ADD KEY `FKResults545620` (`question_id`), ADD KEY `FKResults424948` (`answer_id`), ADD KEY `FKResults822942` (`contact_id`);
+
+ALTER TABLE `shares`
+  ADD PRIMARY KEY (`share_id`), ADD KEY `FKShares94092` (`request_id`), ADD KEY `FKShares53669` (`network_id`);
+
+ALTER TABLE `surveys`
+  ADD PRIMARY KEY (`survey_id`), ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `surveys_questions`
+  ADD PRIMARY KEY (`survey_question_id`), ADD KEY `FKSurveys_qu287896` (`survey_id`), ADD KEY `FKSurveys_qu168997` (`question_id`);
+
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`), ADD UNIQUE KEY `username` (`username`), ADD UNIQUE KEY `employeenumber` (`employeenumber`), ADD UNIQUE KEY `user_id` (`user_id`), ADD UNIQUE KEY `email` (`email`);
+
+
+ALTER TABLE `answers`
+  MODIFY `answer_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+ALTER TABLE `categories`
+  MODIFY `category_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+ALTER TABLE `clients`
+  MODIFY `client_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+ALTER TABLE `contacts`
+  MODIFY `contact_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+ALTER TABLE `familymembers`
+  MODIFY `member_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+ALTER TABLE `networks`
+  MODIFY `network_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+ALTER TABLE `notifications`
+  MODIFY `notification_id` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `questions`
+  MODIFY `question_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+ALTER TABLE `requests`
+  MODIFY `request_id` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `requests_notifications`
+  MODIFY `request_notification` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `results`
+  MODIFY `result_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+ALTER TABLE `shares`
+  MODIFY `share_id` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `surveys`
+  MODIFY `survey_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+ALTER TABLE `surveys_questions`
+  MODIFY `survey_question_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+ALTER TABLE `users`
+  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+
+ALTER TABLE `answers`
+ADD CONSTRAINT `FKAnswers401861` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`);
+
+ALTER TABLE `clients`
+ADD CONSTRAINT `FKClients968335` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+ALTER TABLE `contacts`
+ADD CONSTRAINT `FKContacts114790` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`),
+ADD CONSTRAINT `FKContacts769798` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
+
+ALTER TABLE `familymembers`
+ADD CONSTRAINT `FKFamilymemb507734` FOREIGN KEY (`client_id`) REFERENCES `clients` (`client_id`);
+
+ALTER TABLE `networks`
+ADD CONSTRAINT `FKNetworks173258` FOREIGN KEY (`client_id`) REFERENCES `clients` (`client_id`),
+ADD CONSTRAINT `FKNetworks912632` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`survey_id`),
+ADD CONSTRAINT `FKNetworks939190` FOREIGN KEY (`member_id`) REFERENCES `familymembers` (`member_id`);
+
+ALTER TABLE `notifications`
+ADD CONSTRAINT `FKNotificati77649` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+ALTER TABLE `requests`
+ADD CONSTRAINT `FKRequests552865` FOREIGN KEY (`client_id`) REFERENCES `clients` (`client_id`),
+ADD CONSTRAINT `FKRequests602896` FOREIGN KEY (`user_from_id`) REFERENCES `users` (`user_id`),
+ADD CONSTRAINT `FKRequests860811` FOREIGN KEY (`user_to_id`) REFERENCES `users` (`user_id`);
+
+ALTER TABLE `requests_notifications`
+ADD CONSTRAINT `FKRequests_n103793` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`),
+ADD CONSTRAINT `FKRequests_n351834` FOREIGN KEY (`notification_id`) REFERENCES `notifications` (`notification_id`);
+
+ALTER TABLE `results`
+ADD CONSTRAINT `FKResults424948` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`answer_id`),
+ADD CONSTRAINT `FKResults545620` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`),
+ADD CONSTRAINT `FKResults822942` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`contact_id`);
+
+ALTER TABLE `shares`
+ADD CONSTRAINT `FKShares53669` FOREIGN KEY (`network_id`) REFERENCES `networks` (`network_id`),
+ADD CONSTRAINT `FKShares94092` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`);
+
+ALTER TABLE `surveys_questions`
+ADD CONSTRAINT `FKSurveys_qu168997` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`),
+ADD CONSTRAINT `FKSurveys_qu287896` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`survey_id`);
+
+
+INSERT INTO `users` (`user_id`, `username`, `password`, `forename`, `surname`, `dateofbirth`, `postcode`, `street`, `housenumber`, `city`, `nationality`, `telephonenumber`, `mobilephonenumber`, `usertype`, `email`, `isactive`, `employeenumber`, `wwreset`) VALUES
+(2, 'admin', 'admin', 'admin', 'admin', '2000-01-01', '3769TB', 'Apollo', '95', 'Soesterberg', 'nederlands', '0123456789', NULL, 'Administrator', 'admin@admin.nl', 'Y', '1', 'Y'),
+(3, 'test', 'test', 'test', 'test', '2000-01-01', '3769TB', 'Apollo', '95', 'Soesterberg', 'nederlands', '0123456789', NULL, 'Socialworker', 'test@test.nl', 'Y', '2', 'Y');
+
+INSERT INTO `clients` (`client_id`, `forename`, `surname`, `dateofbirth`, `postcode`, `street`, `housenumber`, `city`, `nationality`, `telephonenumber`, `mobilephonenumber`, `email`, `filenumber`, `dateCreated`, `user_id`) VALUES
+(1, 'Jan', 'Jansen', '2010-06-17', '1234AB', 'Nijenoord', '1', 'Utrecht', 'Nederlands', '123456789', NULL, 'joery.huiden@gmail.com', NULL, '2015-06-17', 3);
+
+INSERT INTO `familymembers` (`member_id`, `forename`, `surname`, `dateofbirth`, `postcode`, `street`, `housenumber`, `city`, `telephonenumber`, `mobilephonenumber`, `nationality`, `email`, `client_id`) VALUES
+(1, 'Truus', 'de Vries', '1988-06-10', '1234AB', 'Nijenoord', '1', 'Utrecht', '123456798', '', 'Nederlands', 'joeryhuiden@hotmail.com', 1);
+
+INSERT INTO `categories` (`category_id`, `name`) VALUES
+(6, 'acquantance'),
+(12, 'bureauhalt'),
+(10, 'careinstitution'),
+(8, 'club'),
+(4, 'colleagues'),
+(7, 'education'),
+(2, 'family'),
+(3, 'friends'),
+(1, 'household'),
+(13, 'justice'),
+(5, 'neighbours'),
+(9, 'religion'),
+(11, 'youthcare');
+
+INSERT INTO `surveys` (`survey_id`, `name`) VALUES
+(1, 'Standaard vragen');
+
+INSERT INTO `questions` (`question_id`, `question`) VALUES
+(1, 'Wat is de meest gebruikelijke manier om contact te hebben met deze persoon?'),
+(2, 'Hoe vaak heeft u contact met deze persoon?'),
+(3, 'Hoever bevind deze persoon zich bij u vandaan?');
+
+
+INSERT INTO `answers` (`answer_id`, `answer`, `question_id`) VALUES
+(1, 'Telefonisch', 1),
+(2, 'Social media', 1),
+(3, 'Video chat', 1),
+(4, 'Face-to-Face', 1),
+(5, 'Brievenpost', 1),
+(6, 'E-mail', 1),
+(7, 'Maandelijks of langer', 2),
+(8, 'Een aantal keer per maand', 2),
+(9, 'Wekelijks', 2),
+(10, 'Een aantal keer per week', 2),
+(11, 'Dagelijks', 2),
+(12, '< 5 km', 3),
+(13, '5 tot 10 km', 3),
+(14, '10 tot 50 km', 3),
+(15, '50 tot 200 km', 3),
+(16, '> 200 km', 3);
+
+
+INSERT INTO `surveys_questions` (`survey_question_id`, `survey_id`, `question_id`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3);
+
+INSERT INTO `networks` (`network_id`, `datecreated`, `commentary`, `client_id`, `member_id`, `survey_id`) VALUES
+(1, '2015-06-17', 'Jan is een stille persoon die moeilijk uit zijn woorden komt.', 1, NULL, 1),
+(4, '2015-06-23', 'De baas heeft het nogal gemunt op Jan.', 1, NULL, 1);
+
+
+INSERT INTO `contacts` (`contact_id`, `fullname`, `role`, `age`, `commentary`, `category_id`, `network_id`) VALUES
+(1, 'Kees van Aken', 'Beste vriend & buurjongen', 6, 'Naast de beste vriend van Jan is het ook direct een buur jongen.', 3, 1),
+(2, 'Jan', 'Buurman', 40, 'Aardige vent, maar vaak niet thuis', 5, 1),
+(3, 'Jans', 'Buurvrouw', 40, 'Rare dame, komt nogal depressief over.', 5, 1),
+(4, 'Katrein', 'Buurmeisje', 12, 'Lieve meid, wilt vaak komen spelen', 5, 1),
+(5, 'Ron', 'Baas', 46, '', 4, 4),
+(6, 'Jannie', 'koffie jufvrouw', 78, 'Heeft nogal een zware rokers stem', 4, 4);
+
+INSERT INTO `results` (`result_id`, `question_id`, `answer_id`, `contact_id`) VALUES
+(1, 1, 4, 1),
+(2, 2, 10, 1),
+(3, 3, 12, 1),
+(4, 1, 4, 2),
+(5, 2, 8, 2),
+(6, 3, 12, 2),
+(7, 1, 4, 3),
+(8, 2, 9, 3),
+(9, 3, 12, 3),
+(10, 1, 4, 4),
+(11, 2, 10, 4),
+(12, 3, 12, 4),
+(13, 1, 4, 5),
+(14, 2, 10, 5),
+(15, 3, 14, 5),
+(16, 1, 4, 6),
+(17, 2, 9, 6),
+(18, 3, 15, 6);

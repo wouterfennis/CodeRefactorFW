@@ -1,0 +1,20 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<polymer-element name="paper-button-submit" extends="button" noscript>
+    <template>
+        <style>
+            :host {
+                border: 0;
+                background: transparent;
+                padding: 0;
+                font-size: inherit;
+				width: inherit;
+				height: inherit;
+            }
+        </style>
+        <paper-button raised>
+            <content></content>
+        </paper-button>
+    </template>
+</polymer-element>

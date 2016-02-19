@@ -1,0 +1,28 @@
+﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="message-window-success" attributes="message" noscript>
+    <template>
+        <style>
+		.alert-box {
+			width: 30%;
+			min-width: 200px;
+			margin: 10px auto;
+			color:#555;
+			border-radius:10px;
+			font-family:Tahoma,Geneva,Arial,sans-serif;font-size:11px;
+			padding:10px 10px 10px 36px;
+		}
+		
+		.alert-box span {
+			font-weight:bold;
+			text-transform:uppercase;
+		}
+		
+		.success {
+			background:#e9ffd9 url('images/success.png') no-repeat 10px 50%;
+			border:1px solid #a6ca8a;
+		}
+        </style>
+			<div class="alert-box success"><span>succes: </span> {{message}}</div>
+    </template>
+</polymer-element>

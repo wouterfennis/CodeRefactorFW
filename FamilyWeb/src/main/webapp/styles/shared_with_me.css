@@ -1,0 +1,28 @@
+body {
+	font-family: sans-serif;
+}
+
+core-toolbar {
+	background-color: #009EE3;
+	width: 100%;
+	text-align:center;
+}
+
+[drawer] {
+	background-color: #FFFFFF;
+}
+
+#title {
+	width:500px;
+	margin:auto;
+	color: #FFFFFF;
+	font-size: 30px;
+	font-weight: bold;
+	text-shadow: rgb(3, 3, 3) 4px 4px 4px;
+}
+
+@media screen and (max-width: 550px){
+  #title{
+  	font-size: 20px;
+  }
+}
