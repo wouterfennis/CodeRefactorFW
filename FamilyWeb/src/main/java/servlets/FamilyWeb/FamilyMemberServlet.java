@@ -118,12 +118,12 @@ public class FamilyMemberServlet extends HttpServlet {
 						nationality, telephoneNumber, mobilePhoneNumber, email);
 				
 				// add familymember object into database
-				OverviewController.getInstance().getDb()
+				OverviewController.getInstance().getDatabaseInterface()
 						.addFamilymember(fm, client);
-				OverviewController.getInstance().getDb().getFamilymembersOfClient(client);
+				OverviewController.getInstance().getDatabaseInterface().getFamilymembersOfClient(client);
 				
 				// add member to existing client in session
-				client.setMyFamilymembers(OverviewController.getInstance().getDb().getFamilymembersOfClient(client));
+				client.setMyFamilymembers(OverviewController.getInstance().getDatabaseInterface().getFamilymembersOfClient(client));
 				
 				// send user to family member overview with succes message
 				req.getSession().setAttribute("client", client);
@@ -177,7 +177,7 @@ public class FamilyMemberServlet extends HttpServlet {
 						nationality, telephoneNumber, mobilePhoneNumber, email);
 				fm.setMember_id(id);
 				// update familymember in the database
-				OverviewController.getInstance().getDb().updateFamilymember(fm);
+				OverviewController.getInstance().getDatabaseInterface().updateFamilymember(fm);
 				
 				// update member in the session
 				ArrayList<Familymember> members= new ArrayList<Familymember>();
@@ -210,7 +210,7 @@ public class FamilyMemberServlet extends HttpServlet {
 			req.getSession().setAttribute(
 					"familyJSON",
 					OverviewController.getInstance()
-							.refreshFamilymember(client));
+							.refreshFamilymembers(client));
 		} catch (JSONException e) {
 			req.setAttribute(
 					"message",
@@ -227,7 +227,7 @@ public class FamilyMemberServlet extends HttpServlet {
 		JSONObject[] networks;
 		try {
 			networks = OverviewController.getInstance().createJSONNetworks(client);
-			req.getSession().setAttribute("familyJSON", OverviewController.getInstance().refreshFamilymember(client));
+			req.getSession().setAttribute("familyJSON", OverviewController.getInstance().refreshFamilymembers(client));
 			req.getSession().setAttribute("nodesNetwork", networks[0]);
 			req.getSession().setAttribute("linksNetwork", networks[1]);
 		} catch (JSONException e) {	}		

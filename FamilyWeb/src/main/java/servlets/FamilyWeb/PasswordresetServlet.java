@@ -54,7 +54,7 @@ public class PasswordresetServlet extends HttpServlet {
 				if (currentUser instanceof Administrator) {
 					try {
 					// load/set users and clients in overview tables
-					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(currentUser));
+					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(currentUser));
 					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(currentUser));
 					// load/set users for autocomple client add/edit page
 					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));

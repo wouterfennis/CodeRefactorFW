@@ -12,7 +12,6 @@ import domain.FamilyWeb.User;
 import servletControllers.FamilyWeb.LoginController;
 import servletControllers.FamilyWeb.OverviewController;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 @SuppressWarnings("serial")
@@ -53,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 					if (controller.isAdministrator(user) && user.isActive() && !user.isWwreset()) {
 						try {
 							// load/set users and clients in overview tables
-							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
+							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(user));
 							// load/set users for autocomple client add/edit page
 							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user));

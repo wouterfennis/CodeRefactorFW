@@ -114,7 +114,7 @@ public class EmployeeServlet extends HttpServlet {
 				if (currentUser instanceof Administrator) {
 					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
 				}
-				req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
+				req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 			} catch (JSONException e) {
 				message += " Overzicht door een onbekende fout niet herladen.";
 				this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
@@ -184,7 +184,7 @@ public class EmployeeServlet extends HttpServlet {
 					if (currentUser instanceof Administrator) {
 						req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
 					}
-					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
+					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 				} catch (JSONException e) {
 					message += " Overzicht door een onbekende fout niet herladen.";
 					this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
