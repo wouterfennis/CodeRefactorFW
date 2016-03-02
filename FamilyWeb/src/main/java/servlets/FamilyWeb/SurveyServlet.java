@@ -82,7 +82,7 @@ public class SurveyServlet extends HttpServlet {
 			JSONObject[] networks;
 			try {
 				// refresh networks in the session and send user to sub_page overview
-				networks = OverviewController.getInstance().createJSONNetworks((Client) req.getSession().getAttribute("client"));
+				networks = OverviewController.getInstance().createJSONNetworkOfClient((Client) req.getSession().getAttribute("client"));
 				req.getSession().setAttribute("nodesNetwork", networks[0]);
 				req.getSession().setAttribute("linksNetwork", networks[1]);
 				req.setAttribute("message", "Het nieuwe netwerk is toegevoegd.");

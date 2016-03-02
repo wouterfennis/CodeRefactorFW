@@ -42,123 +42,126 @@ public class OverviewController {
         this.databaseInterface = databaseInterface;
     }
 
-    public JSONObject[] createJSONNetworks(Client client) throws JSONException {
-        // intialize arrays and object
-        JSONArray netwerkNodes = new JSONArray();
-        JSONArray netwerkLinks = new JSONArray();
-        JSONArray arrayOfNetwerkNodes = new JSONArray();
-        JSONArray arrayOfNetwerkLinks = new JSONArray();
-        JSONObject netwerkPerson = new JSONObject();
-        JSONObject netwerkLink = new JSONObject();
-        JSONObject alleNetwerkNodes = new JSONObject();
-        JSONObject alleNetwerkLinks = new JSONObject();
-        ArrayList<Network> clientNetworks = databaseInterface.getNetworks(
-                client.getClient_id(), 0);
-        // add networks from the client
+    public JSONObject[] createJSONNetworkOfClient(Client client) throws JSONException {
+        JSONArray networkNodes = new JSONArray();
+        JSONArray networkLinks = new JSONArray();
+        JSONArray arrayOfNetworkNodes = new JSONArray();
+        JSONArray arrayOfNetworkLinks = new JSONArray();
+        JSONObject networkPerson = new JSONObject();
+        JSONObject networkLink = new JSONObject();
+        JSONObject allNetworkNodes = new JSONObject();
+        JSONObject allNetworkLinks = new JSONObject();
+
+        ArrayList<Network> clientNetworks = databaseInterface.getNetworks(client.getClient_id(), 0);
+
+        fillClientsNetwork(client, networkNodes, networkLinks, clientNetworks);
+
+        if (!clientNetworks.isEmpty()) {
+            networkPerson.put(client.getForename() + " " + client.getSurname(), networkNodes);
+            networkLink.put(client.getForename() + " " + client.getSurname(), networkLinks);
+            arrayOfNetworkNodes.put(networkPerson);
+            arrayOfNetworkLinks.put(networkLink);
+        }
+
+        fillFamilyNetworks(client, arrayOfNetworkNodes, arrayOfNetworkLinks);
+
+        allNetworkNodes.put("allNetworks", arrayOfNetworkNodes);
+        allNetworkLinks.put("allNetworks", arrayOfNetworkLinks);
+
+        return new JSONObject[]{allNetworkNodes, allNetworkLinks};
+    }
+
+    private void fillFamilyNetworks(Client client, JSONArray arrayOfNetworkNodes, JSONArray arrayOfNetworkLinks) throws JSONException {
+        JSONArray networkNodes;
+        JSONArray networkLinks;
+        JSONObject networkPerson;
+        JSONObject networkLink;
+        for (Familymember fm : client.getMyFamilymembers()) {
+            networkNodes = new JSONArray();
+            networkLinks = new JSONArray();
+            networkPerson = new JSONObject();
+            networkLink = new JSONObject();
+            JSONObject nodesPerson = new JSONObject();
+            JSONObject linksPerson = new JSONObject();
+            ArrayList<Network> familyNetworks = databaseInterface.getNetworks(0, fm.getMember_id());
+
+            for (Network n : familyNetworks) {
+                JSONArray contacts = new JSONArray();
+                JSONArray contactsLinks = new JSONArray();
+                contacts.put(getJsonOfClientNode(client));
+                int i = 0;
+                for (Contact c : n.getContacts()) {
+                    i++;
+                    contacts.put(createJsonOfContact(c));
+                    contactsLinks.put(createJsonOfContactLink(i, c));
+                }
+                if (i != 0) {
+                    nodesPerson.put("commentaar", n.getCommentary());
+                    nodesPerson.put("datum", n.getDateCreated().toString());
+                    nodesPerson.put("nodes", contacts);
+                    linksPerson.put(n.getDateCreated().toString(), contactsLinks);
+                    networkNodes.put(nodesPerson);
+                    networkLinks.put(linksPerson);
+                }
+            }
+            if (!familyNetworks.isEmpty()) {
+                networkPerson.put(fm.getForename() + " " + fm.getSurname(), networkNodes);
+                networkLink.put(fm.getForename() + " " + fm.getSurname(), networkLinks);
+                arrayOfNetworkNodes.put(networkPerson);
+                arrayOfNetworkLinks.put(networkLink);
+            }
+        }
+    }
+
+    private void fillClientsNetwork(Client client, JSONArray networkNodes, JSONArray networkLinks, ArrayList<Network> clientNetworks) throws JSONException {
         for (Network n : clientNetworks) {
             JSONObject nodesPerson = new JSONObject();
             JSONObject linksPerson = new JSONObject();
             JSONArray arrayOfContactNodes = new JSONArray();
             JSONArray arrayOfContactLinks = new JSONArray();
-            JSONObject clientNode = new JSONObject();
-            clientNode.put("name", client.getForename() + " " + client.getSurname());
-            clientNode.put("group", 0);
-            arrayOfContactNodes.put(clientNode);
+            arrayOfContactNodes.put(getJsonOfClientNode(client));
             int i = 0;
-            // for each contact create JSON object for basic info and for results
             for (Contact c : n.getContacts()) {
                 i++;
-                JSONObject contact = new JSONObject();
-                contact.put("name", c.getFullname());
-                contact.put("group", c.getCategories().get(0).getGroup_id());
-                String commentary = c.getCommentary();
-                if (commentary == null || commentary.trim().equals(""))
-                    contact.put("commentary", "");
-                else
-                    contact.put("commentary", commentary);
-                arrayOfContactNodes.put(contact);
-                JSONObject link = createLink(c.getMyResults());
-                link.put("group", c.getCategories().get(0).getGroup_id());
-                link.put("source", i);
-                link.put("target", 0);
-                arrayOfContactLinks.put(link);
+                arrayOfContactNodes.put(createJsonOfContact(c));
+                arrayOfContactLinks.put(createJsonOfContactLink(i, c));
             }
             if (i != 0) {
                 nodesPerson.put("commentaar", n.getCommentary());
                 nodesPerson.put("datum", n.getDateCreated().toString());
                 nodesPerson.put("nodes", arrayOfContactNodes);
                 linksPerson.put(n.getDateCreated().toString(), arrayOfContactLinks);
-                netwerkNodes.put(nodesPerson);
-                netwerkLinks.put(linksPerson);
+                networkNodes.put(nodesPerson);
+                networkLinks.put(linksPerson);
             }
         }
-        if (!clientNetworks.isEmpty()) {
-            netwerkPerson.put(client.getForename() + " " + client.getSurname(),
-                    netwerkNodes);
-            netwerkLink.put(client.getForename() + " " + client.getSurname(),
-                    netwerkLinks);
-            arrayOfNetwerkNodes.put(netwerkPerson);
-            arrayOfNetwerkLinks.put(netwerkLink);
-        }
-        // for each familymember connected to the client
-        for (Familymember fm : client.getMyFamilymembers()) {
-            netwerkNodes = new JSONArray();
-            netwerkLinks = new JSONArray();
-            netwerkPerson = new JSONObject();
-            netwerkLink = new JSONObject();
-            JSONObject nodesPerson = new JSONObject();
-            JSONObject linksPerson = new JSONObject();
-            ArrayList<Network> familyNetworks = databaseInterface.getNetworks(0,
-                    fm.getMember_id());
-            // create JSON object for each network
-            for (Network n : familyNetworks) {
-                JSONArray contacts = new JSONArray();
-                JSONArray contactsLinks = new JSONArray();
-                JSONObject clientNode = new JSONObject();
-                clientNode.put("name", client.getForename() + " " + client.getSurname());
-                clientNode.put("group", 0);
-                contacts.put(clientNode);
-                int i = 0;
-                for (Contact c : n.getContacts()) {
-                    i++;
-                    JSONObject contact = new JSONObject();
-                    contact.put("name", c.getFullname());
-                    contact.put("group", c.getCategories().get(0).getGroup_id());
-                    String commentary = c.getCommentary();
-                    if (commentary == null)
-                        contact.put("commentary", "");
-                    else
-                        contact.put("commentary", commentary);
-                    contacts.put(contact);
-                    JSONObject link = createLink(c.getMyResults());
-                    link.put("group", c.getCategories().get(0).getGroup_id());
-                    link.put("source", i);
-                    link.put("target", 0);
-                    contactsLinks.put(link);
-                }
-                if (i != 0) {
-                    nodesPerson.put("commentaar", n.getCommentary());
-                    nodesPerson.put("datum", n.getDateCreated().toString());
-                    nodesPerson.put("nodes", contacts);
-                    linksPerson.put(n.getDateCreated().toString(),
-                            contactsLinks);
-                    netwerkNodes.put(nodesPerson);
-                    netwerkLinks.put(linksPerson);
-                }
-            }
-            if (!familyNetworks.isEmpty()) {
-                netwerkPerson.put(fm.getForename() + " " + fm.getSurname(),
-                        netwerkNodes);
-                netwerkLink.put(fm.getForename() + " " + fm.getSurname(),
-                        netwerkLinks);
-                arrayOfNetwerkNodes.put(netwerkPerson);
-                arrayOfNetwerkLinks.put(netwerkLink);
-            }
-        }
-        alleNetwerkNodes.put("allNetworks", arrayOfNetwerkNodes);
-        alleNetwerkLinks.put("allNetworks", arrayOfNetwerkLinks);
-        JSONObject[] network = {alleNetwerkNodes, alleNetwerkLinks};
-        return network;
+    }
+
+    private JSONObject getJsonOfClientNode(Client client) throws JSONException {
+        JSONObject clientNode = new JSONObject();
+        clientNode.put("name", client.getForename() + " " + client.getSurname());
+        clientNode.put("group", 0);
+        return clientNode;
+    }
+
+    private JSONObject createJsonOfContactLink(int i, Contact c) throws JSONException {
+        JSONObject link = createLink(c.getMyResults());
+        link.put("group", c.getCategories().get(0).getGroup_id());
+        link.put("source", i);
+        link.put("target", 0);
+        return link;
+    }
+
+    private JSONObject createJsonOfContact(Contact c) throws JSONException {
+        JSONObject contact = new JSONObject();
+        contact.put("name", c.getFullname());
+        contact.put("group", c.getCategories().get(0).getGroup_id());
+        String commentary = c.getCommentary();
+        if (commentary == null || commentary.trim().equals(""))
+            contact.put("commentary", "");
+        else
+            contact.put("commentary", commentary);
+        return contact;
     }
 
     private JSONObject createLink(ArrayList<Result> myResults)

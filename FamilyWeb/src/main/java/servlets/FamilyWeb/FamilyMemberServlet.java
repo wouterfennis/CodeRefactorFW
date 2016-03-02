@@ -226,7 +226,7 @@ public class FamilyMemberServlet extends HttpServlet {
 		// update networks in the session
 		JSONObject[] networks;
 		try {
-			networks = OverviewController.getInstance().createJSONNetworks(client);
+			networks = OverviewController.getInstance().createJSONNetworkOfClient(client);
 			req.getSession().setAttribute("familyJSON", OverviewController.getInstance().refreshFamilymembers(client));
 			req.getSession().setAttribute("nodesNetwork", networks[0]);
 			req.getSession().setAttribute("linksNetwork", networks[1]);
