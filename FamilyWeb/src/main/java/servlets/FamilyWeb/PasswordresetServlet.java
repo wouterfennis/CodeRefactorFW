@@ -55,7 +55,7 @@ public class PasswordresetServlet extends HttpServlet {
 					try {
 					// load/set users and clients in overview tables
 					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(currentUser));
-					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(currentUser));
+					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(currentUser));
 					// load/set users for autocomple client add/edit page
 					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
 					req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR).forward(req, resp);
@@ -67,7 +67,7 @@ public class PasswordresetServlet extends HttpServlet {
 				} else {
 					try {
 					// load/set clients in overview tables
-					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(currentUser));
+					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(currentUser));
 					req.getSession().setAttribute("clients", currentUser.getDbController().getAllClientsOfUser(currentUser));
 					req.getRequestDispatcher(PAGE_STARTSCREEN_SOCIALWORKER).forward(req, resp);
 					} catch (JSONException e) {

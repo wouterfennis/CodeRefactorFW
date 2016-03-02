@@ -16,11 +16,8 @@ import domain.FamilyWeb.Network;
 import domain.FamilyWeb.Result;
 import domain.FamilyWeb.User;
 
-/**
- * The Class OverviewController.
- */
 public class OverviewController {
-    private static OverviewController înstance;
+    private static OverviewController instance;
     private DatabaseInterface databaseInterface = null;
 
     private OverviewController() {
@@ -28,10 +25,10 @@ public class OverviewController {
     }
 
     public static OverviewController getInstance() {
-        if (înstance == null) {
-            înstance = new OverviewController();
+        if (instance == null) {
+            instance = new OverviewController();
         }
-        return înstance;
+        return instance;
     }
 
     public DatabaseInterface getDatabaseInterface() {
@@ -52,7 +49,7 @@ public class OverviewController {
         JSONObject allNetworkNodes = new JSONObject();
         JSONObject allNetworkLinks = new JSONObject();
 
-        ArrayList<Network> clientNetworks = databaseInterface.getNetworks(client.getClient_id(), 0);
+        ArrayList<Network> clientNetworks = databaseInterface.getNetworks(client.getClient_id(), 0); // no familymember, so has to give a 0 to the method
 
         fillClientsNetwork(client, networkNodes, networkLinks, clientNetworks);
 
@@ -76,37 +73,37 @@ public class OverviewController {
         JSONArray networkLinks;
         JSONObject networkPerson;
         JSONObject networkLink;
-        for (Familymember fm : client.getMyFamilymembers()) {
+        for (Familymember familymember : client.getMyFamilymembers()) {
             networkNodes = new JSONArray();
             networkLinks = new JSONArray();
-            networkPerson = new JSONObject();
-            networkLink = new JSONObject();
-            JSONObject nodesPerson = new JSONObject();
-            JSONObject linksPerson = new JSONObject();
-            ArrayList<Network> familyNetworks = databaseInterface.getNetworks(0, fm.getMember_id());
+            ArrayList<Network> familyNetworks = databaseInterface.getNetworks(0, familymember.getMember_id());
 
-            for (Network n : familyNetworks) {
+            for (Network network : familyNetworks) {
                 JSONArray contacts = new JSONArray();
                 JSONArray contactsLinks = new JSONArray();
                 contacts.put(getJsonOfClientNode(client));
-                int i = 0;
-                for (Contact c : n.getContacts()) {
-                    i++;
-                    contacts.put(createJsonOfContact(c));
-                    contactsLinks.put(createJsonOfContactLink(i, c));
+                int contactsCounter = 0;
+                for (Contact contact : network.getContacts()) {
+                    contactsCounter++;
+                    contacts.put(createJsonOfContact(contact));
+                    contactsLinks.put(createJsonOfContactLink(contactsCounter, contact));
                 }
-                if (i != 0) {
-                    nodesPerson.put("commentaar", n.getCommentary());
-                    nodesPerson.put("datum", n.getDateCreated().toString());
+                if (contactsCounter != 0) {
+                    JSONObject nodesPerson = new JSONObject();
+                    JSONObject linksPerson = new JSONObject();
+                    nodesPerson.put("commentaar", network.getCommentary());
+                    nodesPerson.put("datum", network.getDateCreated().toString());
                     nodesPerson.put("nodes", contacts);
-                    linksPerson.put(n.getDateCreated().toString(), contactsLinks);
+                    linksPerson.put(network.getDateCreated().toString(), contactsLinks);
                     networkNodes.put(nodesPerson);
                     networkLinks.put(linksPerson);
                 }
             }
             if (!familyNetworks.isEmpty()) {
-                networkPerson.put(fm.getForename() + " " + fm.getSurname(), networkNodes);
-                networkLink.put(fm.getForename() + " " + fm.getSurname(), networkLinks);
+                networkPerson = new JSONObject();
+                networkLink = new JSONObject();
+                networkPerson.put(familymember.getForename() + " " + familymember.getSurname(), networkNodes);
+                networkLink.put(familymember.getForename() + " " + familymember.getSurname(), networkLinks);
                 arrayOfNetworkNodes.put(networkPerson);
                 arrayOfNetworkLinks.put(networkLink);
             }
@@ -114,23 +111,24 @@ public class OverviewController {
     }
 
     private void fillClientsNetwork(Client client, JSONArray networkNodes, JSONArray networkLinks, ArrayList<Network> clientNetworks) throws JSONException {
-        for (Network n : clientNetworks) {
-            JSONObject nodesPerson = new JSONObject();
-            JSONObject linksPerson = new JSONObject();
+        for (Network network : clientNetworks) {
+
             JSONArray arrayOfContactNodes = new JSONArray();
             JSONArray arrayOfContactLinks = new JSONArray();
             arrayOfContactNodes.put(getJsonOfClientNode(client));
-            int i = 0;
-            for (Contact c : n.getContacts()) {
-                i++;
-                arrayOfContactNodes.put(createJsonOfContact(c));
-                arrayOfContactLinks.put(createJsonOfContactLink(i, c));
+            int contactsCounter = 0;
+            for (Contact contact : network.getContacts()) {
+                contactsCounter++;
+                arrayOfContactNodes.put(createJsonOfContact(contact));
+                arrayOfContactLinks.put(createJsonOfContactLink(contactsCounter, contact));
             }
-            if (i != 0) {
-                nodesPerson.put("commentaar", n.getCommentary());
-                nodesPerson.put("datum", n.getDateCreated().toString());
+            if (contactsCounter != 0) {
+                JSONObject nodesPerson = new JSONObject();
+                JSONObject linksPerson = new JSONObject();
+                nodesPerson.put("commentaar", network.getCommentary());
+                nodesPerson.put("datum", network.getDateCreated().toString());
                 nodesPerson.put("nodes", arrayOfContactNodes);
-                linksPerson.put(n.getDateCreated().toString(), arrayOfContactLinks);
+                linksPerson.put(network.getDateCreated().toString(), arrayOfContactLinks);
                 networkNodes.put(nodesPerson);
                 networkLinks.put(linksPerson);
             }
@@ -140,35 +138,35 @@ public class OverviewController {
     private JSONObject getJsonOfClientNode(Client client) throws JSONException {
         JSONObject clientNode = new JSONObject();
         clientNode.put("name", client.getForename() + " " + client.getSurname());
-        clientNode.put("group", 0);
+        clientNode.put("group", 0); // 0, because client is always group 0 for frontend
         return clientNode;
     }
 
-    private JSONObject createJsonOfContactLink(int i, Contact c) throws JSONException {
-        JSONObject link = createLink(c.getMyResults());
-        link.put("group", c.getCategories().get(0).getGroup_id());
-        link.put("source", i);
-        link.put("target", 0);
+    private JSONObject createJsonOfContactLink(int contactCounter, Contact contact) throws JSONException {
+        JSONObject link = createLink(contact.getMyResults());
+        link.put("group", contact.getCategories().get(0).getGroup_id());
+        link.put("source", contactCounter);
+        link.put("target", 0); // 0, because client is always target 0 for frontend
         return link;
     }
 
-    private JSONObject createJsonOfContact(Contact c) throws JSONException {
-        JSONObject contact = new JSONObject();
-        contact.put("name", c.getFullname());
-        contact.put("group", c.getCategories().get(0).getGroup_id());
-        String commentary = c.getCommentary();
-        if (commentary == null || commentary.trim().equals(""))
-            contact.put("commentary", "");
+    private JSONObject createJsonOfContact(Contact contact) throws JSONException {
+        JSONObject jsonOfContact = new JSONObject();
+        jsonOfContact.put("name", contact.getFullname());
+        jsonOfContact.put("group", contact.getCategories().get(0).getGroup_id());
+        String commentary = contact.getCommentary();
+        if (commentary == null || "".equals(commentary.trim()))
+            jsonOfContact.put("commentary", "");
         else
-            contact.put("commentary", commentary);
-        return contact;
+            jsonOfContact.put("commentary", commentary);
+        return jsonOfContact;
     }
 
     private JSONObject createLink(ArrayList<Result> myResults)
             throws JSONException {
         JSONObject link = new JSONObject();
-        for (Result r : myResults) {
-            switch (r.getMyAnswer().getAnswer_id()) {
+        for (Result result : myResults) {
+            switch (result.getMyAnswer().getAnswer_id()) {
                 case 1:
                     link.put("type", 1);
                     break;
@@ -217,103 +215,89 @@ public class OverviewController {
                 case 16:
                     link.put("distance", 1);
                     break;
+                default :
+                    System.out.println("Unknown answer in creating the link");
             }
         }
         return link;
     }
 
-    public JSONArray RefreshOverviewClients(User currentUser)
-            throws JSONException {
-        JSONArray refreshedClients = new JSONArray();
-        ArrayList<Client> clients = new ArrayList<Client>();
-        if (currentUser instanceof Administrator) {
-            for (Client client : databaseInterface.getAllClients()) {
-                clients.add(client);
-                refreshedClients.put(getClientJSON(client));
-            }
-        } else {
-            for (Client client : databaseInterface.getAllClientsOfUser(currentUser)) {
-                clients.add(client);
-                refreshedClients.put(getClientJSON(client));
-            }
+    public JSONArray refreshOverviewClients(User currentUser) throws JSONException {
+        JSONArray refreshedJsonArrayOfClients = new JSONArray();
+        ArrayList<Client> refreshedArrayListOfClients = new ArrayList<Client>();
+        ArrayList<Client> clients;
+
+        if (currentUser instanceof Administrator)
+            clients = databaseInterface.getAllClients();
+        else
+            clients = databaseInterface.getAllClientsOfUser(currentUser);
+
+        for (Client client : clients) {
+            refreshedArrayListOfClients.add(client);
+            refreshedJsonArrayOfClients.put(getClientJSON(client));
         }
-        currentUser.setMyClients(clients);
-        return refreshedClients;
+
+        currentUser.setMyClients(refreshedArrayListOfClients);
+        return refreshedJsonArrayOfClients;
     }
 
-    private JSONObject getClientJSON(Client c) throws JSONException {
+    private JSONObject getClientJSON(Client client) throws JSONException {
         JSONObject clientJSON = new JSONObject();
-        clientJSON.put("forename", c.getForename());
-        clientJSON.put("surname", c.getSurname());
-        clientJSON.put("dateOfBirth", c.getDateOfBirth());
-        clientJSON.put("postcode", c.getPostcode());
-        clientJSON.put("street", c.getStreet());
-        clientJSON.put("houseNumber", c.getHouseNumber());
-        clientJSON.put("city", c.getCity());
-        clientJSON.put("nationality", c.getNationality());
-        clientJSON.put("telephoneNumber", c.getTelephoneNumber());
-        clientJSON.put("mobilePhoneNumber", c.getMobilePhoneNumber());
-        clientJSON.put("email", c.getEmail());
-        clientJSON.put("fileNumber", c.getFileNumber());
-        clientJSON.put("client_id", c.getClient_id());
+        clientJSON.put("forename", client.getForename());
+        clientJSON.put("surname", client.getSurname());
+        clientJSON.put("dateOfBirth", client.getDateOfBirth());
+        clientJSON.put("postcode", client.getPostcode());
+        clientJSON.put("street", client.getStreet());
+        clientJSON.put("houseNumber", client.getHouseNumber());
+        clientJSON.put("city", client.getCity());
+        clientJSON.put("nationality", client.getNationality());
+        clientJSON.put("telephoneNumber", client.getTelephoneNumber());
+        clientJSON.put("mobilePhoneNumber", client.getMobilePhoneNumber());
+        clientJSON.put("email", client.getEmail());
+        clientJSON.put("fileNumber", client.getFileNumber());
+        clientJSON.put("client_id", client.getClient_id());
         return clientJSON;
     }
 
-    /**
-     * Refresh overview users.
-     *
-     * @param user the user
-     * @return the JSON array
-     * @throws JSONException the JSON exception
-     */
-    public JSONArray refreshOverviewUsers(User user) throws JSONException {
-        JSONArray returns = new JSONArray();
-        ArrayList<User> users = new ArrayList<User>();
-        for (User u : databaseInterface.getAllUsers()) {
-            users.add(u);
-            returns.put(getUserJSON(u));
+    public JSONArray refreshOverviewUsers(User currentUser) throws JSONException {
+        JSONArray refreshedJsonArrayOfUsers = new JSONArray();
+        ArrayList<User> refreshedArrayListOfUsers = new ArrayList<User>();
+        for (User user : databaseInterface.getAllUsers()) {
+            refreshedArrayListOfUsers.add(user);
+            refreshedJsonArrayOfUsers.put(getUserJSON(user));
         }
-        if (user instanceof Administrator) {
-            // set users to administrator
-            Administrator admin = (Administrator) user;
-            admin.setUsers(users);
+        if (currentUser instanceof Administrator) {
+            Administrator admin = (Administrator) currentUser;
+            admin.setUsers(refreshedArrayListOfUsers);
         }
-        return returns;
+        return refreshedJsonArrayOfUsers;
     }
 
-    private JSONObject getUserJSON(User u) throws JSONException {
+    private JSONObject getUserJSON(User user) throws JSONException {
         JSONObject userJSON = new JSONObject();
-        userJSON.put("forename", u.getForename());
-        userJSON.put("surname", u.getSurname());
-        userJSON.put("username", u.getUsername());
-        userJSON.put("dateOfBirth", u.getDateOfBirth());
-        userJSON.put("isActive", u.isActive());
-        userJSON.put("postcode", u.getPostcode());
-        userJSON.put("street", u.getStreet());
-        userJSON.put("houseNumber", u.getHouseNumber());
-        userJSON.put("city", u.getCity());
-        userJSON.put("nationality", u.getNationality());
-        userJSON.put("telephoneNumber", u.getTelephoneNumber());
-        userJSON.put("mobilePhoneNumber", u.getMobilePhoneNumber());
-        userJSON.put("email", u.getEmail());
-        userJSON.put("employeeNumber", u.getEmployeeNumber());
-        userJSON.put("user_id", u.getUser_id());
+        userJSON.put("forename", user.getForename());
+        userJSON.put("surname", user.getSurname());
+        userJSON.put("username", user.getUsername());
+        userJSON.put("dateOfBirth", user.getDateOfBirth());
+        userJSON.put("isActive", user.isActive());
+        userJSON.put("postcode", user.getPostcode());
+        userJSON.put("street", user.getStreet());
+        userJSON.put("houseNumber", user.getHouseNumber());
+        userJSON.put("city", user.getCity());
+        userJSON.put("nationality", user.getNationality());
+        userJSON.put("telephoneNumber", user.getTelephoneNumber());
+        userJSON.put("mobilePhoneNumber", user.getMobilePhoneNumber());
+        userJSON.put("email", user.getEmail());
+        userJSON.put("employeeNumber", user.getEmployeeNumber());
+        userJSON.put("user_id", user.getUser_id());
         return userJSON;
     }
 
-    /**
-     * Auto complete.
-     *
-     * @param currentUser the current user
-     * @return the JSON array
-     */
     public JSONArray autoComplete(User currentUser) {
         JSONArray usersJSON = new JSONArray();
         if (currentUser instanceof Administrator) {
             Administrator admin = (Administrator) currentUser;
-
             try {
-                // create JSON object for each user
                 for (User user : admin.getDbController().getAllUsers()) {
                     JSONObject userJSON = new JSONObject();
                     userJSON.put("label",
@@ -329,21 +313,12 @@ public class OverviewController {
         return usersJSON;
     }
 
-    /**
-     * Refresh familymember.
-     *
-     * @param client the client
-     * @return the JSON array
-     * @throws JSONException the JSON exception
-     */
     public JSONArray refreshFamilymembers(Client client) throws JSONException {
         JSONArray refreshedFamily = new JSONArray();
         ArrayList<Familymember> family = new ArrayList<Familymember>();
         for (Familymember familymember : client.getMyFamilymembers()) {
-            // for each familymember, create JSON Object and add it to the array
-            JSONObject familyMemberJSON = new JSONObject();
             family.add(familymember);
-            familyMemberJSON = new JSONObject();
+            JSONObject familyMemberJSON = new JSONObject();
             familyMemberJSON.put("forename", familymember.getForename());
             familyMemberJSON.put("surname", familymember.getSurname());
             familyMemberJSON.put("dateOfBirth", familymember.getDateOfBirth());
@@ -359,7 +334,6 @@ public class OverviewController {
             familyMemberJSON.put("member_id", familymember.getMember_id());
             refreshedFamily.put(familyMemberJSON);
         }
-        // update clients family
         client.setMyFamilymembers(family);
         return refreshedFamily;
     }

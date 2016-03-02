@@ -13,6 +13,11 @@ import domain.FamilyWeb.User;
 
 public class MailService {
 
+    public static final String MAIL_FROM = "info.familyweb@gmail.com";
+    public static final String SMTP_HOST = "smtp.gmail.com";
+    public static final String PASSWORD = "familyweb12345";
+    public static final int SMTP_PORT = 465;
+    public static final String MAIL_FROM_NAME = "FamilyWeb";
     private User employee = null;
     private String message;
     private String subject;
@@ -23,20 +28,19 @@ public class MailService {
         this.message = message;
     }
 
-    public boolean sendMail() {
-        boolean sendStatus = false;
+    public boolean createAndSendMail() {
         try {
             Transport.send(this.createMail());
-            sendStatus = true;
+            return true;
         } catch (Exception e) {
             Logger.getLogger("sp.lesson5").warning("send failed: " + e.getMessage());
+            return false;
         }
-        return sendStatus;
     }
 
     public MimeMessage createMail() throws UnsupportedEncodingException, MessagingException {
         MimeMessage mailObject = new MimeMessage(this.createMailSession());
-        mailObject.setFrom(new InternetAddress("info.familyweb@gmail.com", "FamilyWeb"));
+        mailObject.setFrom(new InternetAddress(MAIL_FROM, MAIL_FROM_NAME));
         mailObject.setRecipients(Message.RecipientType.TO, this.employee.getEmail());
         mailObject.setSubject(subject);
         mailObject.setSentDate(Calendar.getInstance().getTime());
@@ -46,10 +50,9 @@ public class MailService {
 
     public Session createMailSession() {
         return Session.getDefaultInstance(this.createMailProperties(), new Authenticator() {
-
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("info.familyweb@gmail.com", "familyweb12345");
+                return new PasswordAuthentication(MAIL_FROM, PASSWORD);
             }
 
         });
@@ -57,9 +60,9 @@ public class MailService {
 
     private Properties createMailProperties() {
         Properties mailProperties = new Properties();
-        mailProperties.put("mail.smtp.from", "info.familyweb@gmail.com");
-        mailProperties.put("mail.smtp.host", "smtp.gmail.com");
-        mailProperties.put("mail.smtp.port", 465);
+        mailProperties.put("mail.smtp.from", MAIL_FROM);
+        mailProperties.put("mail.smtp.host", SMTP_HOST);
+        mailProperties.put("mail.smtp.port", SMTP_PORT);
         mailProperties.put("mail.smtp.auth", true);
         mailProperties.put("mail.smtp.ssl.enable", true);
         return mailProperties;

@@ -126,7 +126,7 @@ public class ClientServlet extends HttpServlet {
 			
 			// Refresh client overview page
 			try {
-				req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(this.currentUser));
+				req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(this.currentUser));
 			} catch (JSONException e) {
 				message += " Overzicht door een onbekende fout niet herlanden, overzicht is niet up-to-date met de database.";
 				this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
@@ -190,7 +190,7 @@ public class ClientServlet extends HttpServlet {
 				
 				// Refresh the overviewpage
 				try {
-					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(this.currentUser));
+					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(this.currentUser));
 				} catch (JSONException e) {
 					message += " Overzicht door een onbekende fout niet herlanden, overzicht is niet up-to-date met de database.";
 					this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();

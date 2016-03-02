@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 						try {
 							// load/set users and clients in overview tables
 							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
-							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(user));
+							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(user));
 							// load/set users for autocomple client add/edit page
 							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user));
 							reqDisp = req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR);
@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
 					} else if (!controller.isAdministrator(user) && user.isActive() && !user.isWwreset()) {
 						try {
 							// load/set clients in overview tables
-							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(user));
+							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(user));
 							req.getSession().setAttribute("clients",user.getDbController().getAllClientsOfUser(user));
 							reqDisp = req.getRequestDispatcher(PAGE_STARTSCREEN_SOCIALWORKER);
 						} catch (JSONException e) {
