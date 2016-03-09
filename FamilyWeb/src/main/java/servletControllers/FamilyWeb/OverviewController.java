@@ -17,6 +17,9 @@ import domain.FamilyWeb.Result;
 import domain.FamilyWeb.User;
 
 public class OverviewController {
+    public static final String LINK_STRENGTH = "strength";
+    public static final String LINK_TYPE = "type";
+    public static final String LINK_DISTANCE = "distance";
     private static OverviewController instance;
     private DatabaseInterface databaseInterface = null;
 
@@ -25,9 +28,8 @@ public class OverviewController {
     }
 
     public static OverviewController getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new OverviewController();
-        }
         return instance;
     }
 
@@ -42,8 +44,7 @@ public class OverviewController {
     public JSONObject[] createJSONNetworkOfClient(Client client) throws JSONException {
         JSONArray networkNodes = new JSONArray();
         JSONArray networkLinks = new JSONArray();
-        JSONArray arrayOfNetworkNodes = new JSONArray();
-        JSONArray arrayOfNetworkLinks = new JSONArray();
+        JSONArrayOfNetworks arrayOfNetworks = new JSONArrayOfNetworks(client, new JSONArray(), new JSONArray());
         JSONObject networkPerson = new JSONObject();
         JSONObject networkLink = new JSONObject();
         JSONObject allNetworkNodes = new JSONObject();
@@ -54,26 +55,27 @@ public class OverviewController {
         fillClientsNetwork(client, networkNodes, networkLinks, clientNetworks);
 
         if (!clientNetworks.isEmpty()) {
-            networkPerson.put(client.getForename() + " " + client.getSurname(), networkNodes);
-            networkLink.put(client.getForename() + " " + client.getSurname(), networkLinks);
-            arrayOfNetworkNodes.put(networkPerson);
-            arrayOfNetworkLinks.put(networkLink);
+            String clientsFullName = client.getForename() + " " + client.getSurname();
+            networkPerson.put(clientsFullName, networkNodes);
+            networkLink.put(clientsFullName, networkLinks);
+            arrayOfNetworks.getArrayOfNetworkNodes().put(networkPerson);
+            arrayOfNetworks.getArrayOfNetworkLinks().put(networkLink);
         }
 
-        fillFamilyNetworks(client, arrayOfNetworkNodes, arrayOfNetworkLinks);
+        fillFamilyNetworks(arrayOfNetworks);
 
-        allNetworkNodes.put("allNetworks", arrayOfNetworkNodes);
-        allNetworkLinks.put("allNetworks", arrayOfNetworkLinks);
+        allNetworkNodes.put("allNetworks", arrayOfNetworks.getArrayOfNetworkNodes());
+        allNetworkLinks.put("allNetworks", arrayOfNetworks.getArrayOfNetworkLinks());
 
         return new JSONObject[]{allNetworkNodes, allNetworkLinks};
     }
 
-    private void fillFamilyNetworks(Client client, JSONArray arrayOfNetworkNodes, JSONArray arrayOfNetworkLinks) throws JSONException {
+    private void fillFamilyNetworks(JSONArrayOfNetworks arrayOfNetworks) throws JSONException {
         JSONArray networkNodes;
         JSONArray networkLinks;
         JSONObject networkPerson;
         JSONObject networkLink;
-        for (Familymember familymember : client.getMyFamilymembers()) {
+        for (Familymember familymember : arrayOfNetworks.getClient().getMyFamilymembers()) {
             networkNodes = new JSONArray();
             networkLinks = new JSONArray();
             ArrayList<Network> familyNetworks = databaseInterface.getNetworks(0, familymember.getMember_id());
@@ -81,7 +83,7 @@ public class OverviewController {
             for (Network network : familyNetworks) {
                 JSONArray contacts = new JSONArray();
                 JSONArray contactsLinks = new JSONArray();
-                contacts.put(getJsonOfClientNode(client));
+                contacts.put(getJsonOfClientNode(arrayOfNetworks.getClient()));
                 int contactsCounter = 0;
                 for (Contact contact : network.getContacts()) {
                     contactsCounter++;
@@ -104,15 +106,14 @@ public class OverviewController {
                 networkLink = new JSONObject();
                 networkPerson.put(familymember.getForename() + " " + familymember.getSurname(), networkNodes);
                 networkLink.put(familymember.getForename() + " " + familymember.getSurname(), networkLinks);
-                arrayOfNetworkNodes.put(networkPerson);
-                arrayOfNetworkLinks.put(networkLink);
+                arrayOfNetworks.getArrayOfNetworkNodes().put(networkPerson);
+                arrayOfNetworks.getArrayOfNetworkLinks().put(networkLink);
             }
         }
     }
 
     private void fillClientsNetwork(Client client, JSONArray networkNodes, JSONArray networkLinks, ArrayList<Network> clientNetworks) throws JSONException {
         for (Network network : clientNetworks) {
-
             JSONArray arrayOfContactNodes = new JSONArray();
             JSONArray arrayOfContactLinks = new JSONArray();
             arrayOfContactNodes.put(getJsonOfClientNode(client));
@@ -143,7 +144,7 @@ public class OverviewController {
     }
 
     private JSONObject createJsonOfContactLink(int contactCounter, Contact contact) throws JSONException {
-        JSONObject link = createLink(contact.getMyResults());
+        JSONObject link = createLinksOfResults(contact.getMyResults());
         link.put("group", contact.getCategories().get(0).getGroup_id());
         link.put("source", contactCounter);
         link.put("target", 0); // 0, because client is always target 0 for frontend
@@ -155,71 +156,73 @@ public class OverviewController {
         jsonOfContact.put("name", contact.getFullname());
         jsonOfContact.put("group", contact.getCategories().get(0).getGroup_id());
         String commentary = contact.getCommentary();
-        if (commentary == null || "".equals(commentary.trim()))
-            jsonOfContact.put("commentary", "");
-        else
-            jsonOfContact.put("commentary", commentary);
+        jsonOfContact.put("commentary", (commentary == null || "".equals(commentary.trim())) ? "" : commentary);
         return jsonOfContact;
     }
 
-    private JSONObject createLink(ArrayList<Result> myResults)
+    private JSONObject createLinksOfResults(ArrayList<Result> myResults)
             throws JSONException {
         JSONObject link = new JSONObject();
         for (Result result : myResults) {
-            switch (result.getMyAnswer().getAnswer_id()) {
-                case 1:
-                    link.put("type", 1);
-                    break;
-                case 2:
-                    link.put("type", 2);
-                    break;
-                case 3:
-                    link.put("type", 3);
-                    break;
-                case 4:
-                    link.put("type", 4);
-                    break;
-                case 5:
-                    link.put("type", 5);
-                    break;
-                case 6:
-                    link.put("type", 6);
-                    break;
-                case 7:
-                    link.put("strength", 1);
-                    break;
-                case 8:
-                    link.put("strength", 2);
-                    break;
-                case 9:
-                    link.put("strength", 3);
-                    break;
-                case 10:
-                    link.put("strength", 4);
-                    break;
-                case 11:
-                    link.put("strength", 5);
-                    break;
-                case 12:
-                    link.put("distance", 5);
-                    break;
-                case 13:
-                    link.put("distance", 4);
-                    break;
-                case 14:
-                    link.put("distance", 3);
-                    break;
-                case 15:
-                    link.put("distance", 2);
-                    break;
-                case 16:
-                    link.put("distance", 1);
-                    break;
-                default :
-                    System.out.println("Unknown answer in creating the link");
-            }
+            int answerId = result.getMyAnswer().getAnswer_id();
+            createLinkOfAnswerId(link, answerId);
         }
         return link;
+    }
+
+    private void createLinkOfAnswerId(JSONObject link, int answerId) throws JSONException {
+        switch (answerId) {
+            case 1:
+                link.put(LINK_TYPE, 1);
+                break;
+            case 2:
+                link.put(LINK_TYPE, 2);
+                break;
+            case 3:
+                link.put(LINK_TYPE, 3);
+                break;
+            case 4:
+                link.put(LINK_TYPE, 4);
+                break;
+            case 5:
+                link.put(LINK_TYPE, 5);
+                break;
+            case 6:
+                link.put(LINK_TYPE, 6);
+                break;
+            case 7:
+                link.put(LINK_STRENGTH, 1);
+                break;
+            case 8:
+                link.put(LINK_STRENGTH, 2);
+                break;
+            case 9:
+                link.put(LINK_STRENGTH, 3);
+                break;
+            case 10:
+                link.put(LINK_STRENGTH, 4);
+                break;
+            case 11:
+                link.put(LINK_STRENGTH, 5);
+                break;
+            case 12:
+                link.put(LINK_DISTANCE, 5);
+                break;
+            case 13:
+                link.put(LINK_DISTANCE, 4);
+                break;
+            case 14:
+                link.put(LINK_DISTANCE, 3);
+                break;
+            case 15:
+                link.put(LINK_DISTANCE, 2);
+                break;
+            case 16:
+                link.put(LINK_DISTANCE, 1);
+                break;
+            default :
+                System.out.println("Unknown answer in creating the link");
+        }
     }
 
     public JSONArray refreshOverviewClients(User currentUser) throws JSONException {
