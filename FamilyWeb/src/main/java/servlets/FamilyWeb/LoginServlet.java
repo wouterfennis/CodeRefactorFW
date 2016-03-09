@@ -1,6 +1,7 @@
 package servlets.FamilyWeb;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -55,7 +56,7 @@ public class LoginServlet extends HttpServlet {
 							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(user));
 							// load/set users for autocomple client add/edit page
-							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user));
+							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user, Logger.getAnonymousLogger()));
 							reqDisp = req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR);
 						} catch (JSONException e) {
 							this.setMessage("error", "Kon de gegevens niet goed inladen, probeer opnieuw in te loggen.");

@@ -1,6 +1,7 @@
 package servlets.FamilyWeb;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -57,7 +58,7 @@ public class PasswordresetServlet extends HttpServlet {
 					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(currentUser));
 					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(currentUser));
 					// load/set users for autocomple client add/edit page
-					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 					req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR).forward(req, resp);
 					} catch (JSONException e) {
 						this.setMessage("error", "Kon de gegevens niet goed inladen, probeer opnieuw in te loggen.");

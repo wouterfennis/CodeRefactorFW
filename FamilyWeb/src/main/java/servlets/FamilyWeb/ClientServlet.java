@@ -2,6 +2,7 @@ package servlets.FamilyWeb;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,7 +51,7 @@ public class ClientServlet extends HttpServlet {
 
 		// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
 		if (currentUser instanceof Administrator) {
-			req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+			req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 		}
 		
 		// Check if currentuser is administrator or socialworker to load correct page

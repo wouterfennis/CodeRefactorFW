@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.ArrayList;
 
 import databaseControllers.FamilyWeb.DatabaseInterface;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The Class Client.
@@ -461,4 +463,28 @@ public class Client {
 				+ getFileNumber() + ", DateCreated = " + getDateCreated() + "]";
 	}
 
+	public JSONObject getClientJSON() throws JSONException {
+        JSONObject clientJSON = new JSONObject();
+        clientJSON.put("forename", getForename());
+        clientJSON.put("surname", getSurname());
+        clientJSON.put("dateOfBirth", getDateOfBirth());
+        clientJSON.put("postcode", getPostcode());
+        clientJSON.put("street", getStreet());
+        clientJSON.put("houseNumber", getHouseNumber());
+        clientJSON.put("city", getCity());
+        clientJSON.put("nationality", getNationality());
+        clientJSON.put("telephoneNumber", getTelephoneNumber());
+        clientJSON.put("mobilePhoneNumber", getMobilePhoneNumber());
+        clientJSON.put("email", getEmail());
+        clientJSON.put("fileNumber", getFileNumber());
+        clientJSON.put("client_id", getClient_id());
+        return clientJSON;
+    }
+
+	public JSONObject getJsonOfClientNode() throws JSONException {
+        JSONObject clientNode = new JSONObject();
+        clientNode.put("name", getForename() + " " + getSurname());
+        clientNode.put("group", 0); // 0, because client is always group 0 for frontend
+        return clientNode;
+    }
 }

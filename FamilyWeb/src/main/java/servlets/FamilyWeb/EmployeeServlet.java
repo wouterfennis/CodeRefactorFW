@@ -3,6 +3,7 @@ package servlets.FamilyWeb;
 import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -112,7 +113,7 @@ public class EmployeeServlet extends HttpServlet {
 			try {
 				// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
 				if (currentUser instanceof Administrator) {
-					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 				}
 				req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 			} catch (JSONException e) {
@@ -182,7 +183,7 @@ public class EmployeeServlet extends HttpServlet {
 				try {
 					// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
 					if (currentUser instanceof Administrator) {
-						req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+						req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 					}
 					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 				} catch (JSONException e) {
