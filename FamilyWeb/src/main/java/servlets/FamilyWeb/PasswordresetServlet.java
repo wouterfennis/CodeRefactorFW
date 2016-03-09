@@ -1,6 +1,7 @@
 package servlets.FamilyWeb;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,10 +55,10 @@ public class PasswordresetServlet extends HttpServlet {
 				if (currentUser instanceof Administrator) {
 					try {
 					// load/set users and clients in overview tables
-					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(currentUser));
-					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(currentUser));
+					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(currentUser));
+					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(currentUser));
 					// load/set users for autocomple client add/edit page
-					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 					req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR).forward(req, resp);
 					} catch (JSONException e) {
 						this.setMessage("error", "Kon de gegevens niet goed inladen, probeer opnieuw in te loggen.");
@@ -67,7 +68,7 @@ public class PasswordresetServlet extends HttpServlet {
 				} else {
 					try {
 					// load/set clients in overview tables
-					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(currentUser));
+					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(currentUser));
 					req.getSession().setAttribute("clients", currentUser.getDbController().getAllClientsOfUser(currentUser));
 					req.getRequestDispatcher(PAGE_STARTSCREEN_SOCIALWORKER).forward(req, resp);
 					} catch (JSONException e) {

@@ -1,6 +1,7 @@
 package servlets.FamilyWeb;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +13,6 @@ import domain.FamilyWeb.User;
 import servletControllers.FamilyWeb.LoginController;
 import servletControllers.FamilyWeb.OverviewController;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 @SuppressWarnings("serial")
@@ -53,10 +53,10 @@ public class LoginServlet extends HttpServlet {
 					if (controller.isAdministrator(user) && user.isActive() && !user.isWwreset()) {
 						try {
 							// load/set users and clients in overview tables
-							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
-							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(user));
+							req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
+							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(user));
 							// load/set users for autocomple client add/edit page
-							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user));
+							req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user, Logger.getAnonymousLogger()));
 							reqDisp = req.getRequestDispatcher(PAGE_STARTSCREEN_ADMINISTRATOR);
 						} catch (JSONException e) {
 							this.setMessage("error", "Kon de gegevens niet goed inladen, probeer opnieuw in te loggen.");
@@ -66,7 +66,7 @@ public class LoginServlet extends HttpServlet {
 					} else if (!controller.isAdministrator(user) && user.isActive() && !user.isWwreset()) {
 						try {
 							// load/set clients in overview tables
-							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(user));
+							req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().refreshOverviewClients(user));
 							req.getSession().setAttribute("clients",user.getDbController().getAllClientsOfUser(user));
 							reqDisp = req.getRequestDispatcher(PAGE_STARTSCREEN_SOCIALWORKER);
 						} catch (JSONException e) {

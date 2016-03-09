@@ -3,6 +3,10 @@
  */
 package domain.FamilyWeb;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import servletControllers.FamilyWeb.OverviewController;
+
 import java.util.ArrayList;
 
 /**
@@ -13,6 +17,9 @@ import java.util.ArrayList;
  * @since 2015-04-21
  */
 public class Contact {
+	public static final String LINK_STRENGTH = "strength";
+	public static final String LINK_TYPE = "type";
+	public static final String LINK_DISTANCE = "distance";
 	
 	/** The fullname. */
 	private String fullname;
@@ -196,5 +203,86 @@ public class Contact {
 	 */
 	public void setContact_id(int contact_id) {
 		this.contact_id = contact_id;
+	}
+
+	public JSONObject createJsonOfContact() throws JSONException {
+        JSONObject jsonOfContact = new JSONObject();
+        jsonOfContact.put("name", getFullname());
+        jsonOfContact.put("group", getCategories().get(0).getGroup_id());
+        String commentary = getCommentary();
+        jsonOfContact.put("commentary", (commentary == null || "".equals(commentary.trim())) ? "" : commentary);
+        return jsonOfContact;
+    }
+
+	public JSONObject createJsonOfContactLink(int contactCounter, OverviewController overviewController) throws JSONException {
+        JSONObject link = this.createLinksOfResults(getMyResults());
+        link.put("group", getCategories().get(0).getGroup_id());
+        link.put("source", contactCounter);
+        link.put("target", 0); // 0, because client is always target 0 for frontend
+        return link;
+    }
+	private JSONObject createLinksOfResults(ArrayList<Result> myResults)
+			throws JSONException {
+		JSONObject link = new JSONObject();
+		for (Result result : myResults) {
+			int answerId = result.getMyAnswer().getAnswer_id();
+			createLinkOfAnswerId(link, answerId);
+		}
+		return link;
+	}
+
+	private void createLinkOfAnswerId(JSONObject link, int answerId) throws JSONException {
+		switch (answerId) {
+			case 1:
+				link.put(LINK_TYPE, 1);
+				break;
+			case 2:
+				link.put(LINK_TYPE, 2);
+				break;
+			case 3:
+				link.put(LINK_TYPE, 3);
+				break;
+			case 4:
+				link.put(LINK_TYPE, 4);
+				break;
+			case 5:
+				link.put(LINK_TYPE, 5);
+				break;
+			case 6:
+				link.put(LINK_TYPE, 6);
+				break;
+			case 7:
+				link.put(LINK_STRENGTH, 1);
+				break;
+			case 8:
+				link.put(LINK_STRENGTH, 2);
+				break;
+			case 9:
+				link.put(LINK_STRENGTH, 3);
+				break;
+			case 10:
+				link.put(LINK_STRENGTH, 4);
+				break;
+			case 11:
+				link.put(LINK_STRENGTH, 5);
+				break;
+			case 12:
+				link.put(LINK_DISTANCE, 5);
+				break;
+			case 13:
+				link.put(LINK_DISTANCE, 4);
+				break;
+			case 14:
+				link.put(LINK_DISTANCE, 3);
+				break;
+			case 15:
+				link.put(LINK_DISTANCE, 2);
+				break;
+			case 16:
+				link.put(LINK_DISTANCE, 1);
+				break;
+			default :
+				System.out.println("Unknown answer in creating the link");
+		}
 	}
 }

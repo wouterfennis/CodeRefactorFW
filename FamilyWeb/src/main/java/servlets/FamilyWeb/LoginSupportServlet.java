@@ -60,7 +60,7 @@ public class LoginSupportServlet extends HttpServlet {
 					String mailSubject = "FamilyWeb wachtwoord vergeten"; 
 					String mailMessage = "<div class='text'><p>Beste <span class='bold_text'>" + user.getForename() + "</span>,</p><p>Er is een wachtwoord reset aangevraagd.</p><p>U kunt nu inloggen op <a href='familyweb.balans.nl'>Familyweb</a> met de volgende gegevens:</p></div><div class='information'><table class='custom_table'><tr class='row'><td class='data'>Gebruikersnaam</td><td class='data'>" + user.getUsername() + "</td></tr><tr class='row'><td class='data'>Wachtwoord</td><td class='data'>" + user.getPassword() + "</td></tr></table></div><div class='text'><p>Mochten er zich problemen voordoen met het inloggen of met het gebruik van de applicatie dan kunt u contact opnemen met de <a href='mailto:info@familyweb.nl'>administrator.</a></p><p>Wij hopen dat u een fijne ervaring heeft met de applicatie.</p><p>FamilyWeb</p></div>";
 					MailService mailService = new MailService(user, mailSubject, mailMessage);
-					message += (mailService.sendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
+					message += (mailService.createAndSendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
 					
 					if (message.equals("")) {
 						user.updateDB();
@@ -100,7 +100,7 @@ public class LoginSupportServlet extends HttpServlet {
 					String mailSubject = "FamilyWeb Gebruikersnaam vergeten"; 
 					String mailMessage = "<div class='text'><p>Beste <span class='bold_text'>" + user.getForename() + "</span>,</p><p>Er is een gebruikersnaam vergeten aangevraagd.</p></div><div class='information'><table class='custom_table'><tr class='row'><td class='data'>Gebruikersnaam</td><td class='data'>" + user.getUsername() + "</td></tr></table></div><div class='text'><p>Mochten er zich problemen voordoen met het inloggen of met het gebruik van de applicatie dan kunt u contact opnemen met de <a href='mailto:info@familyweb.nl'>administrator.</a></p><p>Wij hopen dat u een fijne ervaring heeft met de applicatie.</p><p>FamilyWeb</p></div>";
 					MailService mailService = new MailService(user, mailSubject, mailMessage);
-					message += (mailService.sendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator.";
+					message += (mailService.createAndSendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator.";
 				
 					if (message.equals("")) {
 						this.setMessage("success", "De gebruikersnaam is verzonden naar je mail.");

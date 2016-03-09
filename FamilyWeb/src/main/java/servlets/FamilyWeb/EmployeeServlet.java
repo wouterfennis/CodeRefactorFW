@@ -3,6 +3,7 @@ package servlets.FamilyWeb;
 import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -98,7 +99,7 @@ public class EmployeeServlet extends HttpServlet {
 			String mailSubject = "Welkom bij FamilyWeb!"; 
 			String mailMessage = "<div class='text'><p>Beste <span class='bold_text'>" + user.getForename() + "</span>,</p><p>Er is een account aangemaakt op FamilyWeb met uw e-mailadres.</p><p>U kunt nu inloggen op <a href='familyweb.balans.nl'>Familyweb</a> met de volgende gegevens:</p></div><div class='information'><table class='custom_table'><tr class='row'><td class='data'>Gebruikersnaam</td><td class='data'>" + this.user.getUsername() + "</td></tr><tr class='row'><td class='data'>Wachtwoord</td><td class='data'>" + this.user.getPassword() + "</td></tr></table></div><div class='text'><p>Mochten er zich problemen voordoen met het inloggen of met het gebruik van de applicatie dan kunt u contact opnemen met de <a href='mailto:info@familyweb.nl'>administrator.</a></p><p>Wij hopen dat u een fijne ervaring heeft met de applicatie.</p><p>FamilyWeb</p></div>";
 			MailService mailService = new MailService(this.user, mailSubject, mailMessage);
-			message += (mailService.sendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
+			message += (mailService.createAndSendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
 			
 			// If message is not empty mail is send.
 			if (message.equals("")) {
@@ -112,9 +113,9 @@ public class EmployeeServlet extends HttpServlet {
 			try {
 				// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
 				if (currentUser instanceof Administrator) {
-					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+					req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 				}
-				req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
+				req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 			} catch (JSONException e) {
 				message += " Overzicht door een onbekende fout niet herladen.";
 				this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
@@ -169,7 +170,7 @@ public class EmployeeServlet extends HttpServlet {
 					String mailSubject = "FamilyWeb wachtwoord resetten"; 
 					String mailMessage = "<div class='text'><p>Beste <span class='bold_text'>" + user.getForename() + "</span>,</p><p>Er is een wachtwoord reset aangevraagd.</p><p>U kunt nu inloggen op <a href='familyweb.balans.nl'>Familyweb</a> met de volgende gegevens:</p></div><div class='information'><table class='custom_table'><tr class='row'><td class='data'>Gebruikersnaam</td><td class='data'>" + this.user.getUsername() + "</td></tr><tr class='row'><td class='data'>Wachtwoord</td><td class='data'>" + this.user.getPassword() + "</td></tr></table></div><div class='text'><p>Mochten er zich problemen voordoen met het inloggen of met het gebruik van de applicatie dan kunt u contact opnemen met de <a href='mailto:info@familyweb.nl'>administrator.</a></p><p>Wij hopen dat u een fijne ervaring heeft met de applicatie.</p><p>FamilyWeb</p></div>";
 					MailService mailService = new MailService(this.user, mailSubject, mailMessage);
-					message += (mailService.sendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
+					message += (mailService.createAndSendMail()) ? message : message + " Mailservice fout de mail is niet verzonden, Raadpleeg de administrator om het wachtwoord te resetten.";
 				}
 				
 				// Update user
@@ -182,9 +183,9 @@ public class EmployeeServlet extends HttpServlet {
 				try {
 					// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
 					if (currentUser instanceof Administrator) {
-						req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
+						req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser, Logger.getAnonymousLogger()));
 					}
-					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().RefreshOverviewUsers(user));
+					req.getSession().setAttribute("usersJSON", OverviewController.getInstance().refreshOverviewUsers(user));
 				} catch (JSONException e) {
 					message += " Overzicht door een onbekende fout niet herladen.";
 					this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();

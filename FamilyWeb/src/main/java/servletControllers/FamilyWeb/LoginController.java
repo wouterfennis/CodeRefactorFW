@@ -4,76 +4,37 @@ import databaseControllers.FamilyWeb.DatabaseInterface;
 import databaseControllers.FamilyWeb.MySQLDao;
 import domain.FamilyWeb.Administrator;
 
-/**
- * The Class LoginController.
- */
 public class LoginController {
+	private static LoginController instance;
+	private DatabaseInterface databaseInterface = null;
 
-	/** The lc. */
-	private static LoginController lc;
-	
-	/** The db. */
-	private DatabaseInterface db = null;
-	
-	/**
-	 * Instantiates a new login controller.
-	 */
 	private LoginController(){
-		this.db = new MySQLDao();
-		lc = this;
+		this.databaseInterface = new MySQLDao();
+		instance = this;
 	}
-	
-	/**
-	 * Instantiates a new login controller.
-	 *
-	 * @param db the db
-	 */
-	public LoginController(DatabaseInterface db) {
-		this.db = db;
-		lc = this;
+
+	public LoginController(DatabaseInterface databaseInterface) {
+		this.databaseInterface = databaseInterface;
+		instance = this;
 	}
-	
-	/**
-	 * Gets the single instance of LoginController.
-	 *
-	 * @return single instance of LoginController
-	 */
+
 	public static LoginController getInstance() {
-		if(lc == null){
-			lc = new LoginController();
+		if(instance == null){
+			instance = new LoginController();
 		}
-		return lc;
+		return instance;
 	}
-	
-	/**
-	 * Authentication send to database.
-	 *
-	 * @param username the username
-	 * @param password the password
-	 * @return true, if successful
-	 */
+
 	public boolean authentication(String username, String password) {
-		return db.authentication(username, password);
+		return databaseInterface.authentication(username, password);
 	}
-	
-	/**
-	 * Checks if object is an administrator.
-	 *
-	 * @param userObject the user object
-	 * @return true, if is administrator
-	 */
+
 	public boolean isAdministrator(Object userObject) {
-		return (userObject instanceof Administrator) ? true : false; 
+		return (userObject instanceof Administrator);
 	}
-	
-	/**
-	 * Get the user from database.
-	 *
-	 * @param username the username
-	 * @return the user
-	 */
+
 	public Object getUser(String username) {
-		return db.getUser(username);
+		return databaseInterface.getUser(username);
 	}
 	
 }

@@ -3,6 +3,9 @@
  */
 package domain.FamilyWeb;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -345,4 +348,21 @@ public class Familymember {
 				+ ", Email = " + getEmail() + "]";
 	}
 
+	public JSONObject getJsonObject() throws JSONException {
+        JSONObject familyMemberJSON = new JSONObject();
+        familyMemberJSON.put("forename", getForename());
+        familyMemberJSON.put("surname", getSurname());
+        familyMemberJSON.put("dateOfBirth", getDateOfBirth());
+        familyMemberJSON.put("postcode", getPostcode());
+        familyMemberJSON.put("street", getStreet());
+        familyMemberJSON.put("houseNumber", getHouseNumber());
+        familyMemberJSON.put("city", getCity());
+        familyMemberJSON.put("nationality", getNationality());
+        familyMemberJSON.put("telephoneNumber", getTelephoneNumber());
+        familyMemberJSON.put("mobilePhoneNumber", getMobilePhoneNumber());
+        familyMemberJSON.put("email", getEmail());
+        familyMemberJSON.put("type", "familymember");
+        familyMemberJSON.put("member_id", getMember_id());
+        return familyMemberJSON;
+    }
 }

@@ -77,9 +77,9 @@ public class FamilyInformation extends HttpServlet {
 					
 					try {
 						// get the networks from the client and his familymembers
-						JSONObject[] networks = OverviewController.getInstance().createJSONNetworks(client);
+						JSONObject[] networks = OverviewController.getInstance().createJSONNetworkOfClient(client);
 						// set the familymembers into an JSON file for the familymembers_overview
-						req.getSession().setAttribute("familyJSON", OverviewController.getInstance().refreshFamilymember(client));
+						req.getSession().setAttribute("familyJSON", OverviewController.getInstance().refreshFamilymembers(client));
 						// set networks from the client into the session
 						req.getSession().setAttribute("nodesNetwork", networks[0]);
 						req.getSession().setAttribute("linksNetwork", networks[1]);

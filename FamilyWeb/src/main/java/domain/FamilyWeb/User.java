@@ -11,6 +11,8 @@ import java.util.Date;
 import javax.management.Notification;
 
 import databaseControllers.FamilyWeb.DatabaseInterface;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The Class User.
@@ -531,4 +533,23 @@ public abstract class User {
 				+ ", EmployeeNumber = " + getEmployeeNumber() + "]";
 	}
 
+	public JSONObject getUserJSON() throws JSONException {
+        JSONObject userJSON = new JSONObject();
+        userJSON.put("forename", getForename());
+        userJSON.put("surname", getSurname());
+        userJSON.put("username", getUsername());
+        userJSON.put("dateOfBirth", getDateOfBirth());
+        userJSON.put("isActive", isActive());
+        userJSON.put("postcode", getPostcode());
+        userJSON.put("street", getStreet());
+        userJSON.put("houseNumber", getHouseNumber());
+        userJSON.put("city", getCity());
+        userJSON.put("nationality", getNationality());
+        userJSON.put("telephoneNumber", getTelephoneNumber());
+        userJSON.put("mobilePhoneNumber", getMobilePhoneNumber());
+        userJSON.put("email", getEmail());
+        userJSON.put("employeeNumber", getEmployeeNumber());
+        userJSON.put("user_id", getUser_id());
+        return userJSON;
+    }
 }
