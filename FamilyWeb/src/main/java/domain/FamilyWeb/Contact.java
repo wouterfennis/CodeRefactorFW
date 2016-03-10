@@ -197,4 +197,27 @@ public class Contact {
 	public void setContact_id(int contact_id) {
 		this.contact_id = contact_id;
 	}
+
+	/**
+	 * Check contact information
+	 *
+	 * @param name the name
+	 * @param role the role
+	 * @param age the age
+	 * @return true, if successful
+	 */
+	public boolean checkContact(String name, String role, int age) {
+		boolean check = true;
+		// check name
+		check &= (name != null);
+		check &= (!name.equals(""));
+		// check role
+		check &= (role != null);
+		check &= (!role.equals(""));
+		// check age
+		check &= !(age <= 0);
+		return check;
+	}
+
+
 }

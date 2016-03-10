@@ -20,6 +20,10 @@ import domain.FamilyWeb.User;
 public class ContactServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private User user = null;
+	private final String[] contactgroups = new String[]{ "household", "family", "friends",
+            "colleagues", "neighbours", "acquaintance", "education",
+            "club", "religion", "careinstitution", "youthcare",
+            "bureauhalt", "justice" };
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -39,10 +43,6 @@ public class ContactServlet extends HttpServlet {
 		if (user != null) {
 			b = true;
 			// define hardcoded groups
-			String[] contactgroups = { "household", "family", "friends",
-					"colleagues", "neighbours", "acquaintance", "education",
-					"club", "religion", "careinstitution", "youthcare",
-					"bureauhalt", "justice" };
 			contacts = new ArrayList<Contact>();
 			int j =0;
 			int id = 1;
@@ -77,8 +77,9 @@ public class ContactServlet extends HttpServlet {
 						} catch (NumberFormatException e) {
 						}
 						// validate contact, if it went well create contact
-						if (checkContact(name, role, age)){
-							Contact c = new Contact(name, commentary, role,
+						Contact c = new Contact();
+						if (c.checkContact(name, role, age)){
+							c = new Contact(name, commentary, role,
 									age, group,j);
 							c.setContact_id(id);
 							id++;
