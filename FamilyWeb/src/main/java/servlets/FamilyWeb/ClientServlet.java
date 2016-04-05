@@ -25,69 +25,93 @@ public class ClientServlet extends HttpServlet {
 	private final String MESSAGE_SUCCESS = "success";
 	private final String MESSAGE_ERROR = "error";
 	
-	private String PAGE_CLIENT_OVERVIEW = "";
-	private String PAGE_CLIENT_ADD_EDIT = "";
-	
+	private String PAGE_CLIENT_OVERVIEW = "client_overview.jsp";
+	private String PAGE_CLIENT_ADD_EDIT = "add_edit_client.jsp";
+
 	private RequestDispatcher reqDisp = null;
 	private HttpServletRequest req = null;
 	private Client client = null;
 	private User currentUser = null;
 	private Validation validation = Validation.getInstance();
-	private String option = "";
 
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		this.req = req;
-		PAGE_CLIENT_OVERVIEW = "client_overview.jsp";
-		PAGE_CLIENT_ADD_EDIT = "add_edit_client.jsp";
-		
 		// get the option that is called this clould be create client, update client or summary before update
-		option = (req.getParameter("option") != null) ? (String) req.getParameter("option") : "";
-		
+		String option = (req.getParameter("option") != null) ? req.getParameter("option") : "" ;
+
+		currentUser = FindCurrentUserFromHttpRequest(req) ;
+
+		this.ChangePageClientPages(currentUser)   ;
+		this.CheckChosenOptionAndAct(option) ;
+
+		try {
+			reqDisp.forward(req, resp);
+		} catch (Exception e){
+			this.UnexpectedError();
+		}
+	}
+
+    /**
+	 * Finds the User object in HttpServletRequest and converts it to a valid User object.
+	 * @param req Should have the value of the current DoPost() HttpServletRequest Object
+	 * @return User Object that is either Administrator or SocialWorker.
+     */
+	public User FindCurrentUserFromHttpRequest(HttpServletRequest req){
+		User foundUser = null ;
 		// Get current user
 		Object cUser = req.getSession().getAttribute("user");
-		currentUser = (cUser instanceof Administrator) ? (Administrator) cUser : (Socialworker) cUser;
+		foundUser= (cUser instanceof Administrator) ? (Administrator) cUser : (Socialworker) cUser;
 
-		// If currentUser is administrator refresh autocomplete that is required to choose socialworker 
-		if (currentUser instanceof Administrator) {
-			req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(currentUser));
-		}
-		
-		// Check if currentuser is administrator or socialworker to load correct page
-		if (currentUser instanceof Administrator) {
+		return  foundUser ;
+	}
+
+	/**
+	 *  If currentUser is administrator refresh autocomplete that is required to choose socialworker
+	    Also Check if currentuser is administrator or socialworker to load correct page
+	 */
+	public void ChangePageClientPages(User user){
+		if (user instanceof Administrator) {
+			req.getSession().setAttribute("users", OverviewController.getInstance().autoComplete(user));
+
 			PAGE_CLIENT_OVERVIEW = "/administrator/" + PAGE_CLIENT_OVERVIEW;
 			PAGE_CLIENT_ADD_EDIT = "/administrator/" + PAGE_CLIENT_ADD_EDIT;
 		} else {
 			PAGE_CLIENT_OVERVIEW = "/socialworker/" + PAGE_CLIENT_OVERVIEW;
 			PAGE_CLIENT_ADD_EDIT = "/socialworker/" + PAGE_CLIENT_ADD_EDIT;
 		}
-		
-		// Check wich option is choosen
+	}
+
+	/**
+	 *  Check wich option is choosen and act accordingly
+	 */
+	public void CheckChosenOptionAndAct(String option){
 		if (option.equals("create")) {
 			this.create();
-
 		} else if (option.equals("update")) {
 			this.update();
-
 		} else if (option.equals("summary")) {
-
-			// get the clientID to summary the client 
-			if (req.getParameter("currentID") != null) {
-				int clientID = Integer.valueOf((String) req.getParameter("currentID"));
-				this.summary(clientID);
-			} else {
-				this.setMessage(MESSAGE_ERROR, "Onverwachte fout opgetreden, client niet gevonden.");
-				reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
-			}
-		
-		// Option is empty wrong call.
+			// get the clientID to summary the client
+			this.FindClientIdForClientSummary() ;
+			// Option is empty wrong call.
 		} else {
-			this.setMessage(MESSAGE_ERROR, "Onverwachte fout opgetreden, pagina niet gevonden.");
-			reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
+			this.UnexpectedError() ;
 		}
-		reqDisp.forward(req, resp);
 	}
-	
+
+	/**
+	 * 	get the clientID to summary the client
+	 */
+	public void FindClientIdForClientSummary(){
+		if (req.getParameter("currentID") != null) {
+			int clientID = Integer.parseInt(req.getParameter("currentID"));
+			this.summary(clientID);
+		} else {
+			this.UnexpectedError() ;
+		}
+	}
+
 	/**
 	 * Method to create new client.
 	 */
@@ -110,7 +134,7 @@ public class ClientServlet extends HttpServlet {
 			try {
 				userID = Integer.valueOf(req.getParameter("socialworker_id"));
 			} catch (NumberFormatException e) {
-				message += "Zorgprofessional niet gevonden."; //e.printStackTrace();
+				message += "Zorgprofessional niet gevonden.";
 			}
 		}
 		
@@ -129,7 +153,7 @@ public class ClientServlet extends HttpServlet {
 				req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(this.currentUser));
 			} catch (JSONException e) {
 				message += " Overzicht door een onbekende fout niet herlanden, overzicht is niet up-to-date met de database.";
-				this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
+				this.setMessage(MESSAGE_ERROR, message);
 			}
 			
 			reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
@@ -151,10 +175,10 @@ public class ClientServlet extends HttpServlet {
 		// Get the correct id to update client.
 		if (req.getParameter("clientID") != null) {
 			try {
-				int clientID = Integer.valueOf(req.getParameter("clientID"));
+				int clientID = Integer.parseInt(req.getParameter("clientID"));
 				this.summary(clientID);
 			} catch (NumberFormatException e) {
-				message += "Client niet gevonden."; //e.printStackTrace();
+				message += "Client niet gevonden.";
 			}
 		}
 		
@@ -168,14 +192,14 @@ public class ClientServlet extends HttpServlet {
 			
 			// Validate the input, if return is empty string validation is successful
 			message = this.setValidation();
-			
-			// If currentUser is socialworker the socialworker is the same and not updated, else get the choosen socialworker. 
+
+			// If currentUser is socialworker the socialworker is the same and not updated, else get the choosen socialworker.
 			int socialworkerID = 0;
 			if(currentUser instanceof Administrator) {
 				try {
 						socialworkerID = Integer.valueOf(req.getParameter("socialworker_id"));
 					} catch (NumberFormatException e) {
-						message += "Zorgprofessional niet gevonden."; //e.printStackTrace();
+						message += "Zorgprofessional niet gevonden.";
 					}
 			} 
 			
@@ -193,7 +217,7 @@ public class ClientServlet extends HttpServlet {
 					req.getSession().setAttribute("clientsJSON", OverviewController.getInstance().RefreshOverviewClients(this.currentUser));
 				} catch (JSONException e) {
 					message += " Overzicht door een onbekende fout niet herlanden, overzicht is niet up-to-date met de database.";
-					this.setMessage(MESSAGE_ERROR, message); //e.printStackTrace();
+					this.setMessage(MESSAGE_ERROR, message);
 				}
 				reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
 				
@@ -205,8 +229,7 @@ public class ClientServlet extends HttpServlet {
 		
 		// Client is not found
 		} else {
-			message = "Onverwachte fout opgetreden, client niet gevonden.";
-			this.setMessage(MESSAGE_ERROR, message);
+			this.UnexpectedError();
 			reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
 		}
 	}
@@ -288,12 +311,7 @@ public class ClientServlet extends HttpServlet {
 		User socialworkerClient = null;
 		if (currentUser instanceof Administrator) {
 			for (User u : currentUser.getDbController().getAllUsers()) {
-				for (Client c : currentUser.getDbController().getAllClientsOfUser(u)) {
-					if (client.getClient_id() == c.getClient_id()) {
-						socialworkerClient = u;
-						break;
-					}
-				}
+				socialworkerClient = findAllClientsOfAUser(socialworkerClient, u);
 			}
 			// If default socialworker found set fields
 			if (socialworkerClient != null) {
@@ -306,7 +324,17 @@ public class ClientServlet extends HttpServlet {
 		req.setAttribute("client", client);
 		reqDisp = req.getRequestDispatcher(PAGE_CLIENT_ADD_EDIT);
 	}
-	
+
+	private User findAllClientsOfAUser(User socialworkerClient, User u) {
+		for (Client c : currentUser.getDbController().getAllClientsOfUser(u)) {
+            if (client.getClient_id() == c.getClient_id()) {
+                socialworkerClient = u;
+                break;
+            }
+        }
+		return socialworkerClient;
+	}
+
 	/**
 	 * Method to set information message on page.
 	 * @param messageType String type of message could be success, error or warning
@@ -315,5 +343,10 @@ public class ClientServlet extends HttpServlet {
 	private void setMessage(String messageType, String message) {
 		req.setAttribute("messageType", messageType);
 		req.setAttribute("message", message);
+	}
+
+	public void UnexpectedError(){
+		this.setMessage(MESSAGE_ERROR, "Onverwachte fout opgetreden, client niet gevonden.");
+		reqDisp = req.getRequestDispatcher(PAGE_CLIENT_OVERVIEW);
 	}
 }
